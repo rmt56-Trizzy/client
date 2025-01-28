@@ -1,5 +1,17 @@
+import { Route } from "react-router";
+import { BrowserRouter, Routes } from "react-router";
+import Homepage from "./pages/unAuth/Homepage";
+
 function App() {
-  return <div className="text-3xl font-bold">Hello world</div>;
+  return (
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
 
 export default App;
