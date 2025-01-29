@@ -185,7 +185,7 @@ export default function Register() {
             <div className="mt-10 flex items-center gap-4">
               <input
                 type="checkbox"
-                className="w-8 h-8"
+                className="w-8 h-8 accent-green-500"
                 value={isAgreeToTerms}
                 onChange={() => setIsAgreeToTerms(!isAgreeToTerms)}
               />
