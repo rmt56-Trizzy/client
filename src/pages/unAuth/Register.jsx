@@ -6,7 +6,7 @@ import authAnimation from "../../animations/authAnimation2.json";
 import Lottie from "lottie-react";
 import { IoIosArrowDropleft } from "react-icons/io";
 
-export default function Login() {
+export default function Register() {
   const [input, setInput] = useState({
     email: "adada@mail.com",
     fullName: "",
@@ -16,6 +16,8 @@ export default function Login() {
   const [isRegisterValid, setIsRegisterValid] = useState(false);
   const [isNext, setIsNext] = useState(false);
   const [isAgreeToTerms, setIsAgreeToTerms] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     setInput({ ...input, email: e.target.value });
@@ -37,6 +39,7 @@ export default function Login() {
       password: "",
     });
     setIsValidEmail(false);
+    setIsAgreeToTerms(false);
   };
 
   useEffect(() => {
@@ -47,6 +50,10 @@ export default function Login() {
         isAgreeToTerms
     );
   }, [input, isAgreeToTerms]);
+
+  const handleRegister = () => {
+    navigate("/login");
+  };
 
   return (
     <div className="mx-auto xl:w-[550px] flex justify-center items-center h-screen">
@@ -160,7 +167,10 @@ export default function Login() {
 
             {isRegisterValid ? (
               <div className="mt-20">
-                <button className="rounded-4xl border border-gray-300 transition-all duration-500 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-2 hover:border-blue-500">
+                <button
+                  className="rounded-4xl border border-gray-300 transition-all duration-500 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-2 hover:border-blue-500"
+                  onClick={handleRegister}
+                >
                   Register
                 </button>
               </div>
