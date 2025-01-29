@@ -1,6 +1,6 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { validate } from "react-email-validator";
 import authAnimation from "../../animations/authAnimation2.json";
 import Lottie from "lottie-react";
@@ -35,7 +35,10 @@ export default function Login() {
           <div>
             <h1 className="text-xl sm:text-2xl font-semibold">Sign in</h1>
             <p className="text-xs sm:text-sm text-gray-500">
-              Sign up for free or log in to access amazing deals and benefits!
+              Already have account?{" "}
+              <NavLink to="/register" className="text-blue-500">
+                Sign up
+              </NavLink>
             </p>
           </div>
 
@@ -43,7 +46,7 @@ export default function Login() {
             <Lottie animationData={authAnimation} loop={true} />
           </div>
 
-          <div className="md:space-y-4 space-y-2">
+          <form className="md:space-y-4 space-y-2">
             <div className="group relative">
               <label className="absolute left-3.5 top-1.5 text-xs sm:text-sm bg-white px-1 text-gray-500 group-focus-within:text-blue-500">
                 Email
@@ -54,6 +57,7 @@ export default function Login() {
                 onChange={(e) => setInput({ ...input, email: e.target.value })}
                 className="mt-4 w-full border text-sm border-gray-300 rounded-lg px-4 md:py-3 py-2 focus:outline-none focus:border-blue-500"
                 placeholder="id@email.com"
+                required
               />
             </div>
 
@@ -69,24 +73,27 @@ export default function Login() {
                 }
                 className="mt-4 w-full border text-sm border-gray-300 rounded-lg px-4 md:py-3 py-2 focus:outline-none focus:border-blue-500"
                 placeholder="Password"
+                required
+                autoComplete="current-password"
               />
             </div>
 
             <div>
               {isValidInputLogin ? (
                 <button
-                  className="rounded-4xl border border-gray-300 transition-all duration-300 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-1.5 sm:py-2.5 hover:border-blue-500"
+                  className="rounded-4xl border mt-2 border-gray-300 transition-all duration-300 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-1.5 sm:py-2.5 hover:border-blue-500"
                   onClick={handleLogin}
                 >
                   Login
                 </button>
               ) : (
-                <button className="rounded-4xl border border-gray-300 font-semibold text-gray-300 w-full py-1.5 sm:py-2.5 bg-blue-50">
+                <button className="rounded-4xl border mt-2 border-gray-300 font-semibold text-gray-300 w-full py-1.5 sm:py-2.5 bg-blue-50">
                   Login
                 </button>
               )}
             </div>
-
+          </form>
+          <div className="space-y-2 md:space-y-4">
             <div className="grid grid-cols-5 items-center text-gray-500 text-xs sm:text-sm">
               <hr className="col-span-2 border-gray-300" />
               <p className="text-center">OR</p>
