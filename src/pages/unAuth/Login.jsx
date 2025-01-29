@@ -35,7 +35,7 @@ export default function Login() {
           <div>
             <h1 className="text-xl sm:text-2xl font-semibold">Sign in</h1>
             <p className="text-xs sm:text-sm text-gray-500">
-              Already have account?{" "}
+              Don&apos;t have an account?{" "}
               <NavLink to="/register" className="text-blue-500">
                 Sign up
               </NavLink>
