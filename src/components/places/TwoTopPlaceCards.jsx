@@ -1,7 +1,7 @@
 export default function TwoTopPlaceCards() {
   return (
     <div className="relative">
-      <div className="absolute top-0 rounded-lg left-0 w-full h-full bg-gradient-to-b from-blue-500/45 to-transparent z-10"></div>
+      <div className="absolute top-0 rounded-xl left-0 md:w-full h-full bg-gradient-to-b from-blue-500/45 to-transparent z-10 w-[165px]"></div>
       <img
         src="https://cf.bstatic.com/xdata/images/city/600x600/688053.jpg?k=da426cecdc6492da255ca0612c4bb41bd785b2565c83405f7281f15c05b16376&o="
         alt="jakarta"
