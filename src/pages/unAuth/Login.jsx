@@ -101,7 +101,15 @@ export default function Login() {
             </div>
 
             <div className="flex justify-center">
-              <GoogleLogin />
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  const idToken = credentialResponse.credential;
+                  console.log("ID Token:", idToken);
+                }}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+              />
             </div>
 
             <p className="text-xs sm:text-sm text-gray-500 text-center">
