@@ -45,12 +45,16 @@ export default function Navbar() {
             </>
           ) : (
             <div className="flex gap-3">
-              <button className="rounded-md border transition-all duration-300 cursor-pointer border-green-600 py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
-                Login
-              </button>
-              <button className="rounded-md border transition-all duration-300 cursor-pointer border-blue-600 py-1 px-3 font-semibold hover:bg-blue-50 text-blue-600">
-                Register
-              </button>
+              <NavLink to={"/login"}>
+                <button className="rounded-md border transition-all duration-300 cursor-pointer border-green-600 py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
+                  Login
+                </button>
+              </NavLink>
+              <NavLink to={"/register"}>
+                <button className="rounded-md border transition-all duration-300 cursor-pointer border-blue-600 py-1 px-3 font-semibold hover:bg-blue-50 text-blue-600">
+                  Register
+                </button>
+              </NavLink>
             </div>
           )}
         </div>
@@ -90,13 +94,17 @@ export default function Navbar() {
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col gap-4 mx-auto w-32">
-                  <button className="rounded-md border text-sm md:text-base transition-all duration-300 border-green-600 py-1 md:py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
-                    Login
-                  </button>
-                  <button className="rounded-md border text-sm md:text-base transition-all duration-300 border-blue-600 py-1 md:py-1 px-3 font-semibold hover:bg-blue-50 text-blue-600">
-                    Register
-                  </button>
+                <div className="flex flex-col gap-4 mx-auto w-28">
+                  <NavLink to={"/login"}>
+                    <button className="rounded-md border w-full text-sm md:text-base transition-all duration-300 border-green-600 py-1 md:py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
+                      Login
+                    </button>
+                  </NavLink>
+                  <NavLink to={"/register"}>
+                    <button className="rounded-md w-full border text-sm md:text-base transition-all duration-300 border-blue-600 py-1 md:py-1 px-3 font-semibold hover:bg-blue-50 text-blue-600">
+                      Register
+                    </button>
+                  </NavLink>
                 </div>
               )}
             </motion.div>

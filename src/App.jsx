@@ -9,7 +9,10 @@ import MainPageLayout from "./layouts/MainPageLayout";
 function App() {
   return (
     <>
-      <GoogleOAuthProvider>
+      <GoogleOAuthProvider
+        GoogleOAuthProvider
+        clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+      >
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
