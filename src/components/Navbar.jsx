@@ -3,10 +3,12 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdClose } from "react-icons/md";
 import { NavLink } from "react-router";
+import ProfileModal from "./ProfileModal";
 
 export default function Navbar() {
   const isLogin = false;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isModalProfileOpen, setIsModalProfileOpen] = useState(false);
 
   return (
     <div className="md:h-[67px] h-12 border-b-1 border-gray-300">
@@ -22,16 +24,25 @@ export default function Navbar() {
             <GiHamburgerMenu className="text-xl" />
           )}
         </button>
+
+        <ProfileModal isModalOpen={isModalProfileOpen} />
         <div className="hidden md:block">
-          {isLogin ? (
-            <div className="flex items-center gap-2">
-              <img
-                src="/img/profile.png"
-                alt="profile-image"
-                className="w-9 h-9 rounded-full"
-              />
-              <p className="text-xs lg:text-sm">Profile Name</p>
-            </div>
+          {!isLogin ? (
+            <>
+              <button
+                className="cursor-pointer"
+                onClick={() => setIsModalProfileOpen(!isModalProfileOpen)}
+              >
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/img/profile.png"
+                    alt="profile-image"
+                    className="w-9 h-9 rounded-full"
+                  />
+                  <p className="text-xs lg:text-sm">Profile Name</p>
+                </div>
+              </button>
+            </>
           ) : (
             <div className="flex gap-2">
               <button className="rounded-md border border-green-600 py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
@@ -50,26 +61,26 @@ export default function Navbar() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
               transition={{ duration: 1, ease: "easeInOut" }}
-              className="fixed top-12 right-0 h-full w-2/3 bg-white p-24 shadow-lg md:hidden"
+              className="fixed top-12 right-0 h-full w-2/3 bg-white p-10 shadow-lg md:hidden"
             >
-              {isLogin ? (
+              {!isLogin ? (
                 <div className="text-center">
                   <div className="flex flex-col items-center justify-center gap-2 mx-auto">
                     <img
                       src="/img/profile.png"
                       alt="profile-image"
-                      className="w-14 h-14 rounded-full"
+                      className="w-12 h-12 rounded-full"
                     />
                     <p className="text-sm">Profile Name</p>
                   </div>
-                  <div className="mt-8 font-semibold">
+                  <div className="mt-6 font-semibold">
                     <NavLink>
-                      <p className="border-b-1 border-gray-300 w-full py-3">
+                      <p className="border-b-1 text-sm border-gray-300 w-full py-3">
                         My Trips
                       </p>
                     </NavLink>
                     <NavLink>
-                      <p className="py-3 border-b-1 border-gray-300 w-full">
+                      <p className="py-3 text-sm border-b-1 border-gray-300 w-full">
                         Subscription
                       </p>
                     </NavLink>
