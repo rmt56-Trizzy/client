@@ -27,7 +27,7 @@ export default function Navbar() {
 
         <ProfileModal isModalOpen={isModalProfileOpen} />
         <div className="hidden md:block">
-          {!isLogin ? (
+          {isLogin ? (
             <>
               <button
                 className="cursor-pointer"
@@ -44,11 +44,11 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <div className="flex gap-2">
-              <button className="rounded-md border border-green-600 py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
+            <div className="flex gap-3">
+              <button className="rounded-md border transition-all duration-300 cursor-pointer border-green-600 py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
                 Login
               </button>
-              <button className="rounded-md border border-blue-600 py-1 px-3 font-semibold hover:bg-blue-50 text-blue-600">
+              <button className="rounded-md border transition-all duration-300 cursor-pointer border-blue-600 py-1 px-3 font-semibold hover:bg-blue-50 text-blue-600">
                 Register
               </button>
             </div>
@@ -63,7 +63,7 @@ export default function Navbar() {
               transition={{ duration: 1, ease: "easeInOut" }}
               className="fixed top-12 right-0 h-full w-2/3 bg-white p-10 shadow-lg md:hidden"
             >
-              {!isLogin ? (
+              {isLogin ? (
                 <div className="text-center">
                   <div className="flex flex-col items-center justify-center gap-2 mx-auto">
                     <img
@@ -84,17 +84,17 @@ export default function Navbar() {
                         Subscription
                       </p>
                     </NavLink>
-                    <button className="rounded-md border text-sm md:text-base mt-4 border-red-600 py-1 md:py-1 px-3 font-semibold hover:bg-red-50 text-red-600">
+                    <button className="rounded-md border text-sm md:text-base mt-4 transition-all duration-300 border-red-600 py-1 md:py-1 px-3 font-semibold hover:bg-red-50 text-red-600">
                       Logout
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className="flex flex-col gap-4 mx-auto w-32">
-                  <button className="rounded-md border text-sm md:text-base border-green-600 py-1.5 md:py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
+                  <button className="rounded-md border text-sm md:text-base transition-all duration-300 border-green-600 py-1 md:py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
                     Login
                   </button>
-                  <button className="rounded-md border text-sm md:text-base border-blue-600 py-1.5 md:py-1 px-3 font-semibold hover:bg-blue-50 text-blue-600">
+                  <button className="rounded-md border text-sm md:text-base transition-all duration-300 border-blue-600 py-1 md:py-1 px-3 font-semibold hover:bg-blue-50 text-blue-600">
                     Register
                   </button>
                 </div>
