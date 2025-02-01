@@ -113,7 +113,7 @@ export default function RecommendationDetail() {
             <img
               src="/img/booking.png" // Ganti dengan logo aplikasi Anda
               alt="App Logo"
-              className="w-32 h-[49px] object-contain ml-1"
+              className="w-32  object-contain ml-1"
             />
 
             {/* Tombol Booking */}
