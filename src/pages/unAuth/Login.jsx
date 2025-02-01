@@ -17,9 +17,18 @@ const LOGIN = gql`
   }
 `;
 
+export const GOOGLE_LOGIN = gql`
+  mutation GoogleLogin($token: String!) {
+    googleLogin(token: $token) {
+      access_token
+      userId
+    }
+  }
+`;
+
 export default function Login() {
   const [input, setInput] = useState({
-    email: "adada@mail.com",
+    email: "test1@mail.com",
     password: "",
   });
   const [isValidInputLogin, setIsValidInputLogin] = useState(false);
@@ -36,6 +45,17 @@ export default function Login() {
     },
   });
 
+  const [googleLogin] = useMutation(GOOGLE_LOGIN, {
+    onCompleted: async (data) => {
+      await localStorage.setItem("access_token", data.googleLogin.access_token);
+      await localStorage.setItem("userId", data.googleLogin.userId);
+      navigate("/");
+    },
+    onError: (error) => {
+      toastError(error);
+    },
+  });
+
   const handleLogin = (e) => {
     e.preventDefault();
     if (isValidInputLogin) {
@@ -45,6 +65,14 @@ export default function Login() {
         },
       });
     }
+  };
+
+  const handleGoogleLogin = (credentialResponse) => {
+    googleLogin({
+      variables: {
+        token: credentialResponse.credential,
+      },
+    });
   };
 
   useEffect(() => {
@@ -137,12 +165,9 @@ export default function Login() {
 
             <div className="flex justify-center">
               <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  const idToken = credentialResponse.credential;
-                  console.log("ID Token:", idToken);
-                }}
+                onSuccess={handleGoogleLogin}
                 onError={() => {
-                  console.log("Login Failed");
+                  toastError("Login failed");
                 }}
               />
             </div>

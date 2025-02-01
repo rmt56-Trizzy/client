@@ -8,6 +8,7 @@ import { IoIosArrowDropleft } from "react-icons/io";
 import { gql, useMutation } from "@apollo/client";
 import { toastError, toastSuccess } from "../../utils/swallAlert";
 import loadingAnimation from "../../animations/loading.json";
+import { GOOGLE_LOGIN } from "./Login";
 
 const REGISTER = gql`
   mutation Mutation($input: RegisterInput) {
@@ -34,6 +35,17 @@ export default function Register() {
       console.log(data);
       toastSuccess(data.register);
       navigate("/login");
+    },
+    onError: (error) => {
+      toastError(error);
+    },
+  });
+
+  const [googleLogin] = useMutation(GOOGLE_LOGIN, {
+    onCompleted: async (data) => {
+      await localStorage.setItem("access_token", data.googleLogin.access_token);
+      await localStorage.setItem("userId", data.googleLogin.userId);
+      navigate("/");
     },
     onError: (error) => {
       toastError(error);
@@ -76,6 +88,14 @@ export default function Register() {
     register({
       variables: {
         input: input,
+      },
+    });
+  };
+
+  const handleGoogleLogin = (credentialResponse) => {
+    googleLogin({
+      variables: {
+        token: credentialResponse.credential,
       },
     });
   };
@@ -134,7 +154,12 @@ export default function Register() {
                 </div>
 
                 <div className="flex justify-center">
-                  <GoogleLogin />
+                  <GoogleLogin
+                    onSuccess={handleGoogleLogin}
+                    onError={() => {
+                      toastError("Login failed");
+                    }}
+                  />
                 </div>
 
                 <p className="text-xs sm:text-sm text-gray-500 text-center">
