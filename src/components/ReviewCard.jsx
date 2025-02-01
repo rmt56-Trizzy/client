@@ -1,15 +1,24 @@
-export default function ReviewCard() {
+import PropTypes from "prop-types";
+export default function ReviewCard({ name, review, img }) {
+  console.log(img, "ini apa bos??");
+
   return (
-    <div className="flex gap-4 bg-[#b0efef] justify-center items-center rounded-lg md:p-3 p-2 h-full">
-      <img
-        src="/img/review1.jpg"
-        alt="review1"
-        className="lg:w-10 lg:h-10 w-8 h-8 rounded-full"
-      />
-      <p className="font-semibold md:text-base text-xs text-black">
-        &quot;Trizzy completely changed how I plan my trips! I found the perfect
-        hotels and got a seamless itinerary in minutes.&quot;
-      </p>
+    <div className="gap-4 bg-[#b0efef] rounded-lg md:text-base text-xs text-black font-semibold  md:p-3 p-2 h-full">
+      <div className="flex items-center gap-2 md:gap-3">
+        <img
+          src={img}
+          alt={name}
+          className="lg:w-10 lg:h-10 w-8 h-8 rounded-full"
+        />
+        <p>{name}</p>
+      </div>
+      <p className="mt-2 text-center">{review}</p>
     </div>
   );
 }
+
+ReviewCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  review: PropTypes.string.isRequired,
+  img: PropTypes.string.isRequired,
+};

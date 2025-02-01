@@ -10,7 +10,7 @@ export default function TwoTopPlaceCards() {
       />
 
       <div className="absolute md:top-2 md:py-3 md:px-5 top-0 p-1 flex md:gap-2 gap-1 items-center z-20">
-        <p className="font-bold text-white md:text-2xl text-sm">Jakarta</p>
+        <p className="font-bold text-white md:text-2xl text-sm">Indonesia</p>
         <img
           src="/img/Indonesia flag.png"
           alt="indonesia-flag"
