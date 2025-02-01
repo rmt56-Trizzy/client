@@ -9,6 +9,7 @@ import { ApolloProvider } from "@apollo/client";
 import client from "./config/apolllo";
 import UnAuthLayout from "./layouts/UnAuthLayout";
 import PaymentPage from "./pages/auth/PaymentPage";
+import AuthLayout from "./layouts/AuthLayout";
 
 function App() {
   return (
@@ -21,8 +22,11 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
               </Route>
-
-              <Route path="/pay" element={<PaymentPage />} />
+              <Route element={<AuthLayout />}>
+                <Route element={<MainPageLayout />}>
+                  <Route path="/pay" element={<PaymentPage />} />
+                </Route>
+              </Route>
               <Route element={<MainPageLayout />}>
                 <Route path="/" element={<Homepage />} />
               </Route>
