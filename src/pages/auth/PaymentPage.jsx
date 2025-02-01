@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { toastError, toastSuccess } from "../../utils/swallAlert";
-// import { useNavigate } from "react-router";
 
 export default function PaymentPage() {
   const [snapToken, setSnapToken] = useState(null);
+  console.log("🚀 ~ PaymentPage ~ snapToken:", snapToken);
   const [paymentStatus, setPaymentStatus] = useState(null); // ✅ Store payment status
   const [loading, setLoading] = useState(false); // ✅ Show loading while fetching
 
@@ -18,8 +18,37 @@ export default function PaymentPage() {
       import.meta.env.VITE_MIDTRANS_CLIENT_KEY
     );
     script.async = true;
+
     document.body.appendChild(script);
   }, []);
+
+  // 🔹 Trigger Midtrans Payment when snapToken is ready
+  useEffect(() => {
+    if (snapToken) {
+      console.log("✅ snapToken received:", snapToken);
+
+      window.snap.pay(snapToken, {
+        onSuccess: function (result) {
+          toastSuccess("🎉 Payment Success!");
+          setPaymentStatus("success");
+          console.log("✅ Payment Success:", result);
+        },
+        onPending: function (result) {
+          toastSuccess("🎉 Payment Pending!");
+          setPaymentStatus("pending");
+          console.log("⏳ Payment Pending:", result);
+        },
+        onError: function (result) {
+          toastError("🛑 Payment Failed!");
+          setPaymentStatus("failed");
+          console.log("❌ Payment Error:", result);
+        },
+        onClose: function () {
+          toastSuccess("🛑 Payment Closed!");
+        },
+      });
+    }
+  }, [snapToken]); // ✅ Runs only when `snapToken` updates
 
   // Function to call the backend and get Snap Token
   const createTransaction = async () => {
@@ -59,7 +88,15 @@ export default function PaymentPage() {
         return;
       }
 
-      setSnapToken(result.data.addSubscription);
+      // ✅ Ensure snapToken is not empty before updating state
+      const token = result?.data.addSubscription;
+      if (!token) {
+        toastError("❌ Failed to retrieve Snap Token.");
+        console.error("🚀 Error: Snap Token is missing from API response.");
+        return;
+      }
+
+      setSnapToken(token);
 
       // 🔹 Open Midtrans Payment UI
       window.snap.pay(snapToken, {
@@ -67,6 +104,7 @@ export default function PaymentPage() {
           toastSuccess("🎉 Payment Success!");
           setPaymentStatus("success"); // ✅ Update UI for success
           // navigate("/"); // habis itu actionnya mau kemana... / setting di midtrans dashboard
+
           console.log("Payment Success:", result);
         },
         onPending: function (result) {
