@@ -73,8 +73,8 @@ export default function Homepage() {
           <CardChatBox />
         </div>
       </div>
-      <div className="md:mt-24 mt-18 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0">
-        <p className="lg:text-3xl md:text-2xl font-semibold">
+      <div className="md:mt-24 mt-19 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0">
+        <p className="lg:text-3xl md:text-2xl text-xl font-bold text-slate-700">
           Top Places to Visit
         </p>
         <div className="grid grid-cols-2 md:gap-5 gap-2 mt-5">
@@ -96,7 +96,7 @@ export default function Homepage() {
             <TwoTopPlaceCards />
           </div>
         </div>
-        <div className="mt-10 md:mt-20 lg:mt-36 md:text-5xl lg:text-6xl text-2xl font-semibold text-center text-slate-700">
+        <div className="mt-10 md:mt-15 lg:mt-18 md:text-5xl lg:text-6xl text-2xl font-semibold text-center text-slate-700">
           <p className="font-bold">
             Simplify your travel using our trip planner AI
           </p>
