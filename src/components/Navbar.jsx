@@ -11,7 +11,7 @@ export default function Navbar() {
   const [isModalProfileOpen, setIsModalProfileOpen] = useState(false);
 
   return (
-    <div className="md:h-[67px] border-b-1 border-gray-300">
+    <div className="md:h-[67px] border-b-1 border-gray-300 sticky top-0 z-50 bg-white">
       <div className="mx-auto lg:px-12 md:px-10 flex items-center h-full px-4">
         <div className="me-auto">LOGO</div>
         <button
@@ -27,7 +27,7 @@ export default function Navbar() {
 
         <ProfileModal isModalOpen={isModalProfileOpen} />
         <div className="hidden md:block">
-          {isLogin ? (
+          {!isLogin ? (
             <div className="flex gap-4">
               <div className="rounded-full flex justify-between items-center gap-4 px-3 bg-gray-200">
                 <p className=" font-semibold">IDR</p>
@@ -81,9 +81,9 @@ export default function Navbar() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
               transition={{ duration: 1, ease: "easeInOut" }}
-              className="fixed top-12 right-0 h-full w-2/3 bg-white p-10 shadow-lg md:hidden"
+              className="fixed top-10 right-0 h-full w-2/3 bg-white p-10 shadow-lg md:hidden"
             >
-              {isLogin ? (
+              {!isLogin ? (
                 <div className="text-center">
                   <div className="flex flex-col items-center justify-center gap-2 mx-auto">
                     <img
