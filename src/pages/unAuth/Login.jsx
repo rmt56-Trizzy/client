@@ -4,6 +4,18 @@ import { NavLink, useNavigate } from "react-router";
 import { validate } from "react-email-validator";
 import authAnimation from "../../animations/authAnimation2.json";
 import Lottie from "lottie-react";
+import { gql, useMutation } from "@apollo/client";
+import { toastError } from "../../utils/swallAlert";
+import loadingAnimation from "../../animations/loading.json";
+
+const LOGIN = gql`
+  mutation Login($login: LoginInput) {
+    login(login: $login) {
+      access_token
+      userId
+    }
+  }
+`;
 
 export default function Login() {
   const [input, setInput] = useState({
@@ -13,10 +25,25 @@ export default function Login() {
   const [isValidInputLogin, setIsValidInputLogin] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (isValidInputLogin) {
+  const [login, { loading }] = useMutation(LOGIN, {
+    onCompleted: async (data) => {
+      await localStorage.setItem("access_token", data.login.access_token);
+      await localStorage.setItem("userId", data.login.userId);
       navigate("/");
-      return;
+    },
+    onError: (error) => {
+      toastError(error);
+    },
+  });
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (isValidInputLogin) {
+      login({
+        variables: {
+          login: input,
+        },
+      });
     }
   };
 
@@ -80,12 +107,20 @@ export default function Login() {
 
             <div>
               {isValidInputLogin ? (
-                <button
-                  className="rounded-4xl border mt-2 border-gray-300 transition-all duration-300 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-1.5 sm:py-2.5 hover:border-blue-500"
-                  onClick={handleLogin}
-                >
-                  Login
-                </button>
+                loading ? (
+                  <button className="rounded-4xl h-11.5 border mt-2 border-gray-300 font-semibold text-gray-300 w-full py-1.5 sm:py-2.5 bg-blue-50">
+                    <div className="w-10 mx-auto -mt-2">
+                      <Lottie animationData={loadingAnimation} loop={true} />
+                    </div>
+                  </button>
+                ) : (
+                  <button
+                    className="rounded-4xl border mt-2 border-gray-300 transition-all duration-300 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-1.5 sm:py-2.5 hover:border-blue-500"
+                    onClick={handleLogin}
+                  >
+                    Login
+                  </button>
+                )
               ) : (
                 <button className="rounded-4xl border mt-2 border-gray-300 font-semibold text-gray-300 w-full py-1.5 sm:py-2.5 bg-blue-50">
                   Login
