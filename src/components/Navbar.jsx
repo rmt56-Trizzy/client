@@ -126,7 +126,10 @@ export default function Navbar() {
                         Subscription
                       </p>
                     </NavLink>
-                    <button className="rounded-md border text-sm md:text-base mt-4 transition-all duration-300 border-red-600 py-1 md:py-1 px-3 font-semibold hover:bg-red-50 text-red-600">
+                    <button
+                      className="rounded-md border text-sm md:text-base mt-4 transition-all duration-300 border-red-600 py-1 md:py-1 px-3 font-semibold hover:bg-red-50 text-red-600"
+                      onClick={handelLogout}
+                    >
                       Logout
                     </button>
                   </div>
