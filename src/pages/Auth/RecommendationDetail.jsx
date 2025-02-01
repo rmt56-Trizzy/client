@@ -111,9 +111,9 @@ export default function RecommendationDetail() {
           <div className="bg-slate-200 p-[14px] rounded-lg flex items-center justify-between shadow-md mb-8">
             {/* Logo */}
             <img
-              src="/img/booking.png" // Ganti dengan logo aplikasi Anda
+              src="/img/booking.png" 
               alt="App Logo"
-              className="w-32  object-contain ml-1"
+              className="w-[135px]  object-contain ml-1.5"
             />
 
             {/* Tombol Booking */}
@@ -124,7 +124,7 @@ export default function RecommendationDetail() {
                   "_blank"
                 )
               }
-              className="cursor-pointer bg-[#21bcbe] hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition"
+              className="cursor-pointer bg-[#21bcbe] hover:bg-teal-600 text-white text-lg font-semibold py-2 px-4 rounded-lg transition"
             >
               Book Hotel in {city}
             </button>
@@ -133,7 +133,7 @@ export default function RecommendationDetail() {
           {/* Itinerary Header dengan tombol Save */}
           <div className="flex justify-between items-center mb-2">
             <h3 className=" text-[24px] font-semibold ">Itinerary</h3>
-            <button className="px-4 py-2 rounded bg-[#21bcbe] hover:bg-teal-600 text-white cursor-pointer">
+            <button className="px-4 py-2 rounded bg-[#21bcbe] hover:bg-teal-600 text-white text-lg cursor-pointer">
               Add to My Trip
             </button>
           </div>
