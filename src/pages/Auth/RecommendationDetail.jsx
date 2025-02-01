@@ -1,11 +1,12 @@
 import "leaflet/dist/leaflet.css";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import FitBounds from "../../components/Fitbounds";
 
 export default function RecommendationDetail() {
   const [selectedDay, setSelectedDay] = useState(null);
+  const mapRef = useRef(null);
 
   const itinerary = {
     day1: [
@@ -78,6 +79,12 @@ export default function RecommendationDetail() {
     setCollapse((prev) => prev.map((val, i) => (i === index ? !val : false)));
   };
 
+  const zoomToLocation = (coordinates) => {
+    if (mapRef.current) {
+      mapRef.current.flyTo(coordinates, 16); // Fly ke koordinat dan zoom level 16
+    }
+  };
+
   return (
     <div className="max-w-[63rem] mx-auto pt-8 pb-12">
       <div className="grid grid-cols-[550px_1fr] gap-8">
@@ -90,7 +97,7 @@ export default function RecommendationDetail() {
               alt="City Thumbnail"
               className="w-full rounded-lg"
             />
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-60">
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-60 rounded-b-lg">
               {/* Gradient cover on top of the image */}
             </div>
             <div className="absolute bottom-[43px] left-4 bg-opacity-60 px-2 py-1 rounded">
@@ -175,7 +182,10 @@ export default function RecommendationDetail() {
                           className="w-16 h-16 rounded mr-5"
                         />
                         <div>
-                          <h5 className="text-lg font-semibold text-gray-900">
+                          <h5
+                            className="text-lg font-semibold text-gray-900 cursor-pointer"
+                            onClick={() => zoomToLocation(place.coordinate)}
+                          >
                             {place.name}
                           </h5>
                           <p className="text-sm text-gray-600">
@@ -197,6 +207,7 @@ export default function RecommendationDetail() {
             center={[35.6895, 139.6917]}
             zoom={selectedDay ? 16 : 12}
             className="w-[80%] h-[650px] rounded-lg"
+            ref={mapRef}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
