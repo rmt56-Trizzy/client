@@ -5,6 +5,15 @@ import { validate } from "react-email-validator";
 import authAnimation from "../../animations/authAnimation2.json";
 import Lottie from "lottie-react";
 import { IoIosArrowDropleft } from "react-icons/io";
+import { gql, useMutation } from "@apollo/client";
+import { toastError, toastSuccess } from "../../utils/swallAlert";
+import loadingAnimation from "../../animations/loading.json";
+
+const REGISTER = gql`
+  mutation Mutation($input: RegisterInput) {
+    register(input: $input)
+  }
+`;
 
 export default function Register() {
   const [input, setInput] = useState({
@@ -12,12 +21,24 @@ export default function Register() {
     fullName: "",
     password: "",
   });
+
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [isRegisterValid, setIsRegisterValid] = useState(false);
   const [isNext, setIsNext] = useState(false);
   const [isAgreeToTerms, setIsAgreeToTerms] = useState(false);
 
   const navigate = useNavigate();
+
+  const [register, { loading }] = useMutation(REGISTER, {
+    onCompleted: (data) => {
+      console.log(data);
+      toastSuccess(data.register);
+      navigate("/login");
+    },
+    onError: (error) => {
+      toastError(error);
+    },
+  });
 
   const handleEmailChange = (e) => {
     setInput({ ...input, email: e.target.value });
@@ -52,7 +73,11 @@ export default function Register() {
   }, [input, isAgreeToTerms]);
 
   const handleRegister = () => {
-    navigate("/login");
+    register({
+      variables: {
+        input: input,
+      },
+    });
   };
 
   return (
@@ -174,12 +199,20 @@ export default function Register() {
 
             {isRegisterValid ? (
               <div className="mt-10 md:mt-20">
-                <button
-                  className="rounded-4xl border mt-2 md:mt-4 border-gray-300 transition-all duration-300 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-1.5 sm:py-2.5 hover:border-blue-500"
-                  onClick={handleRegister}
-                >
-                  Register
-                </button>
+                {loading ? (
+                  <button className="rounded-4xl h-11.5 border mt-2 md:mt-4 border-gray-300 transition-all duration-300 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-1.5 sm:py-2.5 hover:border-blue-500">
+                    <div className="w-10 mx-auto -mt-2">
+                      <Lottie animationData={loadingAnimation} loop={true} />
+                    </div>
+                  </button>
+                ) : (
+                  <button
+                    className="rounded-4xl border mt-2 h-11.5 md:mt-4 border-gray-300 transition-all duration-300 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-1.5 sm:py-2.5 hover:border-blue-500"
+                    onClick={handleRegister}
+                  >
+                    Register
+                  </button>
+                )}
               </div>
             ) : (
               <div className="mt-10 md:mt-20">
