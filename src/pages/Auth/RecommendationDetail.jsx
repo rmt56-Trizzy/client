@@ -71,17 +71,20 @@ export default function RecommendationDetail() {
   const city = "Tokyo";
 
   const [collapse, setCollapse] = useState(
-    Array.from({ length: days.length }, () => false)
+    Array.from({ length: days.length }, () => true)
   );
 
-  const toggleCollapse = (index) => {
+  const handleSelectDay = (index) => {
     setSelectedDay(selectedDay === days[index] ? null : days[index]);
-    setCollapse((prev) => prev.map((val, i) => (i === index ? !val : false)));
+  };
+
+  const toggleCollapse = (index) => {
+    setCollapse((prev) => prev.map((val, i) => (i === index ? !val : val)));
   };
 
   const zoomToLocation = (coordinates) => {
     if (mapRef.current) {
-      mapRef.current.flyTo(coordinates, 16); // Fly ke koordinat dan zoom level 16
+      mapRef.current.flyTo(coordinates, 16);
     }
   };
 
@@ -111,7 +114,7 @@ export default function RecommendationDetail() {
           <div className="bg-slate-200 p-[14px] rounded-lg flex items-center justify-between shadow-md mb-8">
             {/* Logo */}
             <img
-              src="/img/booking.png" 
+              src="/img/booking.png"
               alt="App Logo"
               className="w-[135px]  object-contain ml-1.5"
             />
@@ -145,7 +148,7 @@ export default function RecommendationDetail() {
             {days.map((dayLabel, idx) => (
               <button
                 key={dayLabel}
-                onClick={() => toggleCollapse(idx)}
+                onClick={() => handleSelectDay(idx)}
                 className={`py-2 rounded-3xl cursor-pointer outline-[3px] ${
                   selectedDay === dayLabel
                     ? "outline-black"
@@ -167,10 +170,16 @@ export default function RecommendationDetail() {
                 {/* Header Card */}
                 <div
                   className="day-card-header p-3 cursor-pointer bg-gray-100 flex justify-between items-center"
-                  onClick={() => toggleCollapse(idx)}
+                  onClick={() => handleSelectDay(idx)}
                 >
                   <h4 className="m-0">{`Day ${idx + 1}`}</h4>
-                  <span className="text-3xl">
+                  <span
+                    className="text-3xl cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation(); 
+                      toggleCollapse(idx);
+                    }}
+                  >
                     {collapse[idx] ? (
                       <RiArrowDropDownLine />
                     ) : (
