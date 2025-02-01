@@ -7,6 +7,7 @@ import Register from "./pages/unAuth/Register";
 import MainPageLayout from "./layouts/MainPageLayout";
 import { ApolloProvider } from "@apollo/client";
 import client from "./config/apolllo";
+import PaymentPage from "./pages/auth/PaymentPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/pay" element={<PaymentPage />} />
 
               <Route element={<MainPageLayout />}>
                 <Route path="/" element={<Homepage />} />
