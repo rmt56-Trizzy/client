@@ -11,8 +11,8 @@ export default function Navbar() {
   const [isModalProfileOpen, setIsModalProfileOpen] = useState(false);
 
   return (
-    <div className="md:h-[67px] h-12 border-b-1 border-gray-300">
-      <div className="mx-auto container flex items-center h-full px-4 md:px-0">
+    <div className="md:h-[67px] border-b-1 border-gray-300">
+      <div className="mx-auto lg:px-12 md:px-10 flex items-center h-full px-4">
         <div className="me-auto">LOGO</div>
         <button
           className="md:hidden flex flex-col justify-center items-center gap-1 p-2 cursor-pointer"
@@ -28,7 +28,15 @@ export default function Navbar() {
         <ProfileModal isModalOpen={isModalProfileOpen} />
         <div className="hidden md:block">
           {isLogin ? (
-            <>
+            <div className="flex gap-4">
+              <div className="rounded-full flex justify-between items-center gap-4 px-3 bg-gray-200">
+                <p className=" font-semibold">IDR</p>
+                <img
+                  src="/img/Indonesia flag.png"
+                  alt="indo-flag"
+                  className="w-6 h-6 rounded-full"
+                />
+              </div>
               <button
                 className="cursor-pointer"
                 onClick={() => setIsModalProfileOpen(!isModalProfileOpen)}
@@ -42,9 +50,17 @@ export default function Navbar() {
                   <p className="text-xs lg:text-sm">Profile Name</p>
                 </div>
               </button>
-            </>
+            </div>
           ) : (
-            <div className="flex gap-3">
+            <div className="flex gap-4">
+              <div className="rounded-full flex justify-between items-center gap-4 px-3 bg-gray-200">
+                <p className=" font-semibold">IDR</p>
+                <img
+                  src="/img/Indonesia flag.png"
+                  alt="indo-flag"
+                  className="w-6 h-6 rounded-full"
+                />
+              </div>
               <NavLink to={"/login"}>
                 <button className="rounded-md border transition-all duration-300 cursor-pointer border-green-600 py-1 px-3 font-semibold hover:bg-green-50 text-green-600">
                   Login
