@@ -1,6 +1,7 @@
 import CardChatBox from "../../components/AI/CardChatBox";
-import TwoTopPlaceCards from "../../components/places/TwoTopPlaceCards";
+import TwoTopPlaceCards from "../../components/places/TopPlaceCards";
 import { MdOutlineFlightTakeoff } from "react-icons/md";
+import ReviewCard from "../../components/ReviewCard";
 
 export default function Homepage() {
   return (
@@ -54,6 +55,36 @@ export default function Homepage() {
               Plan a new trip
             </button>
             <MdOutlineFlightTakeoff className="md:text-3xl text-2xl" />
+          </div>
+        </div>
+      </div>
+      <div className="bg-[#21bcbe] text-white">
+        <div className="md:mt-16 mt-4 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0">
+          <div className="lg:py-20 py-10">
+            <p className="lg:text-6xl md:text-4xl md:w-[500px] font-bold lg:w-[700px] text-center w-[250px] mx-auto">
+              Cool things people have said about Trizzy
+            </p>
+            <div className="md:mt-10 mt-8">
+              <div className="grid lg:grid-cols-2 grid-cols-1  md:gap-5 gap-2">
+                <div className="col-span-1 lg:h-[180px] md:h-[140px] h-[90px]">
+                  <ReviewCard />
+                </div>
+                <div className="col-span-1 lg:h-[180px] md:h-[140px] h-[90px]">
+                  <ReviewCard />
+                </div>
+              </div>
+              <div className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-2 md:mt-5 mt-2">
+                <div className="col-span-1 lg:h-[180px] md:h-[140px] h-[90px]">
+                  <ReviewCard />
+                </div>
+                <div className="col-span-1 lg:h-[180px] md:h-[140px] h-[90px]">
+                  <ReviewCard />
+                </div>
+                <div className="col-span-1 lg:h-[180px] md:h-[140px] h-[90px]">
+                  <ReviewCard />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
