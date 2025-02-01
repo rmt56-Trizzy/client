@@ -133,7 +133,7 @@ export default function RecommendationDetail() {
           {/* Itinerary Header dengan tombol Save */}
           <div className="flex justify-between items-center mb-2">
             <h3 className=" text-[24px] font-semibold ">Itinerary</h3>
-            <button className="px-4 py-2 rounded bg-[#21bcbe] hover:bg-teal-600 text-white text-lg cursor-pointer">
+            <button className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white text-lg cursor-pointer">
               Add to My Trip
             </button>
           </div>
