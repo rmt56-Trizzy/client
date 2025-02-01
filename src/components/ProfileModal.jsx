@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 
-export default function ProfileModal({ isModalOpen }) {
+export default function ProfileModal({ isModalOpen, handelLogout }) {
   return (
     <AnimatePresence>
       {isModalOpen && (
@@ -23,7 +23,10 @@ export default function ProfileModal({ isModalOpen }) {
                   Subscription
                 </li>
                 <li>
-                  <button className="w-full py-2 mt-8 cursor-pointer text-red-600 border-red-600 font-semibold border rounded-md hover:bg-red-50 transition-all duration-300">
+                  <button
+                    className="w-full py-2 mt-8 cursor-pointer text-red-600 border-red-600 font-semibold border rounded-md hover:bg-red-50 transition-all duration-300"
+                    onClick={handelLogout}
+                  >
                     Logout
                   </button>
                 </li>
@@ -38,4 +41,5 @@ export default function ProfileModal({ isModalOpen }) {
 
 ProfileModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
+  handelLogout: PropTypes.func.isRequired,
 };
