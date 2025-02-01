@@ -30,7 +30,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="md:h-[67px] border-b-1 border-gray-300 sticky top-0 z-50 bg-white">
+    <div className="md:h-[67px] h-10 border-b-1 border-gray-300 sticky top-0 z-50 bg-white">
       <div className="mx-auto lg:px-12 md:px-10 flex items-center h-full px-4">
         <div className="me-auto">LOGO</div>
         <button
