@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { toastError, toastSuccess } from "../../utils/swallAlert";
+// import { useNavigate } from "react-router";
 
 export default function PaymentPage() {
   const [snapToken, setSnapToken] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState(null); // ✅ Store payment status
   const [loading, setLoading] = useState(false); // ✅ Show loading while fetching
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const access_token = localStorage.getItem("access_token");
   useEffect(() => {
@@ -65,7 +66,7 @@ export default function PaymentPage() {
         onSuccess: function (result) {
           toastSuccess("🎉 Payment Success!");
           setPaymentStatus("success"); // ✅ Update UI for success
-          //   navigate("/"); // habis itu actionnya mau kemana... / setting di midtrans dashboard
+          // navigate("/"); // habis itu actionnya mau kemana... / setting di midtrans dashboard
           console.log("Payment Success:", result);
         },
         onPending: function (result) {
