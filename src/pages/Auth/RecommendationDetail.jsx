@@ -107,13 +107,27 @@ export default function RecommendationDetail() {
             </div>
           </div>
 
-          <div className="py-2">
-            <a
-              href={`https://www.booking.com/searchresults.id.html?ss=${city}&ssne=${city}&ssne_untouched=${city}&dest_type=city`}
-              target="_blank"
+          {/* Card untuk tombol Book Hotel */}
+          <div className="bg-slate-200 p-[14px] rounded-lg flex items-center justify-between shadow-md mb-8">
+            {/* Logo */}
+            <img
+              src="/img/booking.png" // Ganti dengan logo aplikasi Anda
+              alt="App Logo"
+              className="w-32 h-[49px] object-contain ml-1"
+            />
+
+            {/* Tombol Booking */}
+            <button
+              onClick={() =>
+                window.open(
+                  `https://www.booking.com/searchresults.id.html?ss=${city}&ssne=${city}&ssne_untouched=${city}&dest_type=city`,
+                  "_blank"
+                )
+              }
+              className="cursor-pointer bg-[#21bcbe] hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition"
             >
               Book Hotel in {city}
-            </a>
+            </button>
           </div>
 
           {/* Itinerary Header dengan tombol Save */}
