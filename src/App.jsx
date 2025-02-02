@@ -10,6 +10,7 @@ import client from "./config/apolllo";
 import UnAuthLayout from "./layouts/UnAuthLayout";
 import PaymentPage from "./pages/auth/PaymentPage";
 import AuthLayout from "./layouts/AuthLayout";
+import ProfilePage from "./pages/auth/ProfilePage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route element={<AuthLayout />}>
                 <Route element={<MainPageLayout />}>
                   <Route path="/pay" element={<PaymentPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
                 </Route>
               </Route>
               <Route element={<MainPageLayout />}>
