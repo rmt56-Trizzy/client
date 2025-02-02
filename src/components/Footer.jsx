@@ -5,7 +5,6 @@ import {
   FaGithub,
   FaLinkedin,
 } from "react-icons/fa6";
-import { NavLink } from "react-router";
 
 export default function Footer() {
   return (
@@ -73,24 +72,46 @@ export default function Footer() {
             &copy; 2025 Trizzy. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0 ">
-            <button className="text-gray-600 hover:text-teal-500">
-              <FaFacebook />
-            </button>
-            <button className="text-gray-600 hover:text-teal-500">
-              <FaXTwitter />
-            </button>
-            <button className="text-gray-600 hover:text-teal-500">
-              <FaInstagram />
-            </button>
-            <NavLink
-              to="https://github.com/rmt56-Trizzy"
+            <a
+              href="https://github.com/rmt56-Trizzy"
               className="text-gray-600 hover:text-teal-500"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaFacebook />
+            </a>
+            <a
+              href="https://github.com/rmt56-Trizzy"
+              className="text-gray-600 hover:text-teal-500"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaXTwitter />
+            </a>
+            <a
+              href="https://github.com/rmt56-Trizzy"
+              className="text-gray-600 hover:text-teal-500"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaInstagram />
+            </a>
+            <a
+              href="https://github.com/rmt56-Trizzy"
+              className="text-gray-600 hover:text-teal-500"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaGithub />
-            </NavLink>
-            <button className="text-gray-600 hover:text-teal-500">
+            </a>
+            <a
+              href="https://github.com/rmt56-Trizzy"
+              className="text-gray-600 hover:text-teal-500"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FaLinkedin />
-            </button>
+            </a>
           </div>
         </div>
       </div>

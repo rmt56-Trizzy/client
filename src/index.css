@@ -1,7 +1,37 @@
 @import "tailwindcss";
 
-
 body {
-    font-family: "Lexend", serif;
-  }
-  
+  font-family: "Lexend", serif;
+}
+
+.custom-scrollbar {
+  overflow-x-auto !important; 
+}
+
+::-webkit-scrollbar {
+  display: block; 
+}
+
+html,
+body {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px !important; 
+  height: 8px !important; 
+  display: block !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #21bcbe !important; 
+  border-radius: 2px !important; 
+  display: block !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 2px !important;
+  display: block !important;
+}
