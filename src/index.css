@@ -1,7 +1,16 @@
 @import "tailwindcss";
 
-
 body {
-    font-family: "Lexend", serif;
-  }
-  
+  font-family: "Lexend", serif;
+}
+
+/* Untuk semua elemen dengan scrollbar */
+::-webkit-scrollbar {
+  display: none; /* Untuk Chrome, Safari */
+}
+
+html,
+body {
+  scrollbar-width: none; /* Untuk Firefox */
+  -ms-overflow-style: none; /* Untuk Internet Explorer dan Edge */
+}

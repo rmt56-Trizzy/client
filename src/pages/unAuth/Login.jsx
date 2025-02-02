@@ -136,8 +136,8 @@ export default function Login() {
             <div>
               {isValidInputLogin ? (
                 loading ? (
-                  <button className="rounded-4xl h-11.5 border mt-2 border-gray-300 font-semibold text-gray-300 w-full py-1.5 sm:py-2.5 bg-blue-50">
-                    <div className="w-10 mx-auto -mt-2">
+                  <button className="rounded-4xl md:h-11.5 h-9.5 border mt-2 border-gray-300 font-semibold text-gray-300 w-full py-1.5 sm:py-2.5 bg-blue-50">
+                    <div className="md:w-10 w-8.5 mx-auto -mt-1 md:-mt-2">
                       <Lottie animationData={loadingAnimation} loop={true} />
                     </div>
                   </button>
