@@ -53,8 +53,8 @@ export default function Navbar() {
         <div className="hidden md:block">
           {isLogin ? (
             <div className="flex gap-4">
-              <div className="rounded-full flex justify-between items-center gap-4 px-3 bg-gray-200">
-                <p className=" font-semibold">IDR</p>
+              <div className="rounded-full flex justify-between items-center gap-3 px-3 bg-gray-200">
+                <p className=" font-semibold">ID</p>
                 <img
                   src="/img/Indonesia flag.png"
                   alt="indo-flag"
