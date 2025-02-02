@@ -58,7 +58,7 @@ export default function Chatbox() {
           </div>
 
           {/* Messages Container */}
-          <div className="bg-white h-[400px] md:h-[500px] overflow-y-auto p-4 md:p-6 space-y-4">
+          <div className="bg-white h-[360px] md:h-[500px] overflow-y-auto p-4 md:p-6 space-y-4">
             {chatMessages.map((msg, index) => (
               <div
                 key={index}

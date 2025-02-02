@@ -1,5 +1,5 @@
 import "leaflet/dist/leaflet.css";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import FitBounds from "../../components/Fitbounds";
@@ -139,37 +139,32 @@ export default function RecommendationDetail() {
   };
 
   return (
-    <div className="max-w-[63rem] mx-auto pt-8 pb-12">
-      <div className="grid grid-cols-[550px_1fr] gap-8">
+    <div className="max-w-[63rem] mx-auto pt-8 pb-12 px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[550px_1fr] gap-8">
         {/* Kolom Kiri */}
         <div className="left-column">
-          {/* Thumbnail dengan overlay nama kota */}
+          {/* Thumbnail */}
           <div className="thumbnail-section relative mb-4">
             <img
               src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/27/84/4b/d7/caption.jpg?w=1200&h=-1&s=1&cx=994&cy=946&chk=v1_6a1bd939ce726b103997"
               alt="City Thumbnail"
               className="w-full rounded-lg"
             />
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-60 rounded-b-lg">
-              {/* Gradient cover on top of the image */}
-            </div>
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-60 rounded-b-lg"></div>
             <div className="absolute bottom-[43px] left-4 bg-opacity-60 px-2 py-1 rounded">
-              <h2 className="text-white text-5xl font-medium">
+              <h2 className="text-white text-4xl md:text-5xl font-medium">
                 Tokyo for 3 days
               </h2>
             </div>
           </div>
 
-          {/* Card untuk tombol Book Hotel */}
-          <div className="bg-slate-200 p-[14px] rounded-lg flex items-center justify-between shadow-md mb-8">
-            {/* Logo */}
+          {/* Card Booking */}
+          <div className="bg-slate-200 p-[14px] rounded-lg flex flex-col md:flex-row items-center justify-between shadow-md mb-8">
             <img
               src="/img/booking.png"
               alt="App Logo"
-              className="w-[135px]  object-contain ml-1.5"
+              className="w-[135px] object-contain mb-2 md:mb-0 md:ml-1.5"
             />
-
-            {/* Tombol Booking */}
             <button
               onClick={() =>
                 window.open(
@@ -177,15 +172,15 @@ export default function RecommendationDetail() {
                   "_blank"
                 )
               }
-              className="cursor-pointer bg-[#21bcbe] hover:bg-teal-600 text-white text-base font-semibold py-2 px-4 rounded-lg transition"
+              className="cursor-pointer bg-[#21bcbe] hover:bg-teal-600 text-white text-base font-semibold py-2 px-4 rounded-lg transition w-full md:w-auto"
             >
               Book Hotel in {city}
             </button>
           </div>
 
-          {/* Itinerary Header dengan tombol Save */}
+          {/* Itinerary Header */}
           <div className="flex justify-between items-center mb-2">
-            <h3 className=" text-[24px] font-semibold ">Itinerary</h3>
+            <h3 className="text-xl md:text-2xl font-semibold">Itinerary</h3>
             <button className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white text-base cursor-pointer">
               Add to My Trip
             </button>
@@ -193,17 +188,17 @@ export default function RecommendationDetail() {
 
           <hr className="my-4" />
 
-          {/* Tombol-tombol Day */}
-          <div className="day-buttons flex gap-3.5 mb-4 py-2">
+          {/* Tombol Day */}
+          <div className="day-buttons flex flex-wrap gap-3.5 mb-4 py-2">
             {days.map((dayLabel, idx) => (
               <button
                 key={dayLabel}
                 onClick={() => handleSelectDay(idx)}
-                className={`py-2 rounded-3xl cursor-pointer outline-[3px] ${
+                className={`py-2 rounded-3xl cursor-pointer outline-[3px] w-[80px] md:w-[100px] ${
                   selectedDay === dayLabel
                     ? "outline-black"
                     : "outline-slate-300"
-                } w-[100px]`}
+                }`}
               >
                 {`Day ${idx + 1}`}
               </button>
@@ -218,7 +213,6 @@ export default function RecommendationDetail() {
                 className="day-card bg-white/80 mb-2 rounded-lg overflow-hidden shadow"
                 ref={cardRefs[idx]}
               >
-                {/* Header Card */}
                 <div
                   className="day-card-header p-3 cursor-pointer bg-gray-100 flex justify-between items-center"
                   onClick={() => handleSelectDay(idx)}
@@ -238,10 +232,8 @@ export default function RecommendationDetail() {
                     )}
                   </span>
                 </div>
-                {/* Isi Card (Collapsible) */}
                 {collapse[idx] && (
                   <div className="day-card-body p-3">
-                    {/* Menambahkan ReactSortable di sini */}
                     <ReactSortable
                       list={itinerary[day]}
                       setList={(newList) => {
@@ -253,16 +245,16 @@ export default function RecommendationDetail() {
                       group="locations"
                       animation={200}
                     >
-                      {itinerary[day].map((place, i) => (
+                      {itinerary[day].map((place) => (
                         <div
                           key={place.slug}
-                          className={`place-item flex items-center px-2 py-3 border-b border-slate-300`}
+                          className="place-item flex items-center px-2 py-3 border-b border-slate-300"
                           data-day={day}
                         >
                           <img
                             src={place.image}
                             alt={place.name}
-                            className="w-16 h-16 rounded mr-5"
+                            className="w-14 h-14 md:w-16 md:h-16 rounded mr-5"
                           />
                           <div>
                             <h5
@@ -286,18 +278,17 @@ export default function RecommendationDetail() {
         </div>
 
         {/* Kolom Kanan: Map */}
-        <div className="map-section w-[550px] h-[650px] sticky top-1">
+        <div className="map-section w-full lg:w-[550px] h-[400px] md:h-[500px] lg:h-[650px] sticky top-1">
           <MapContainer
             center={[35.6895, 139.6917]}
             zoom={selectedDay ? 16 : 12}
-            className="w-[80%] h-[650px] rounded-lg"
+            className="w-full h-full rounded-lg"
             ref={mapRef}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution="&copy; OpenStreetMap contributors"
             />
-
             {!lastZoomed && (
               <FitBounds
                 markers={
@@ -308,7 +299,6 @@ export default function RecommendationDetail() {
                 padding={[50, 50]}
               />
             )}
-
             {(selectedDay
               ? itinerary[selectedDay]
               : Object.values(itinerary).flat()
@@ -316,20 +306,15 @@ export default function RecommendationDetail() {
               <Marker key={place.id} position={place.coordinate}>
                 <Popup>
                   <div className="flex w-56 items-start space-x-3">
-                    {/* Gambar */}
                     <img
                       src={place.image}
                       alt={place.name}
-                      className="w-16 h-16 object-fit rounded-md"
+                      className="w-14 h-14 md:w-16 md:h-16 object-fit rounded-md"
                     />
-
-                    {/* Info Tempat */}
                     <div className="flex flex-col">
                       <h3 className="text-lg font-semibold text-gray-900">
                         {place.name}
                       </h3>
-
-                      {/* Kategori */}
                       <span className="text-xs font-medium text-gray-600 px-0.5 py-0.5 rounded-md w-fit">
                         {place.category}
                       </span>
