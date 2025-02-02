@@ -55,7 +55,7 @@ export default function RecommendationDetail() {
         category: "Architectural Buildings",
       },
       {
-        id: "ginza",
+        slug: "ginza",
         name: "Ginza",
         image:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
@@ -303,7 +303,7 @@ export default function RecommendationDetail() {
                 markers={
                   selectedDay
                     ? itinerary[selectedDay]
-                    : [...itinerary.day1, ...itinerary.day2, ...itinerary.day3]
+                    : Object.values(itinerary).flat()
                 }
                 padding={[50, 50]}
               />
@@ -311,7 +311,7 @@ export default function RecommendationDetail() {
 
             {(selectedDay
               ? itinerary[selectedDay]
-              : [...itinerary.day1, ...itinerary.day2, ...itinerary.day3]
+              : Object.values(itinerary).flat()
             ).map((place) => (
               <Marker key={place.id} position={place.coordinate}>
                 <Popup>
