@@ -4,6 +4,8 @@ import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import FitBounds from "../../components/Fitbounds";
 import { ReactSortable } from "react-sortablejs";
+import { TbMapPinPlus } from "react-icons/tb";
+import { TbCalendarPlus } from "react-icons/tb";
 
 export default function RecommendationDetail() {
   const [selectedDay, setSelectedDay] = useState(null);
@@ -139,7 +141,7 @@ export default function RecommendationDetail() {
   };
 
   return (
-    <div className="max-w-[63rem] mx-auto pt-8 pb-12 px-4">
+    <div className="max-w-[63rem] mx-auto md:pt-8 pt-4 pb-12 px-4">
       <div className="grid grid-cols-1 lg:grid-cols-[550px_1fr] gap-8">
         {/* Kolom Kiri */}
         <div className="left-column">
@@ -161,8 +163,8 @@ export default function RecommendationDetail() {
           {/* Card Booking */}
           <div className="bg-slate-200 p-[14px] rounded-lg flex flex-col md:flex-row items-center justify-between shadow-md mb-8">
             <img
-              src="/img/booking.png"
-              alt="App Logo"
+              src="https://layla.ai/logosArea/Booking.com%20hotel%20booking%20logo.svg"
+              alt="Booking.com"
               className="w-[135px] object-contain mb-2 md:mb-0 md:ml-1.5"
             />
             <button
@@ -172,8 +174,9 @@ export default function RecommendationDetail() {
                   "_blank"
                 )
               }
-              className="cursor-pointer bg-[#21bcbe] hover:bg-teal-600 text-white text-base font-semibold py-2 px-4 rounded-lg transition w-full md:w-auto"
+              className="cursor-pointer bg-[#21bcbe] hover:bg-teal-600 text-white text-base py-2 px-4 rounded-lg transition w-full md:w-auto flex items-center justify-center gap-2"
             >
+              <TbCalendarPlus />
               Book Hotel in {city}
             </button>
           </div>
@@ -181,7 +184,8 @@ export default function RecommendationDetail() {
           {/* Itinerary Header */}
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-xl md:text-2xl font-semibold">Itinerary</h3>
-            <button className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white text-base cursor-pointer">
+            <button className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+              <TbMapPinPlus className="text-sm md:text-base lg:text-lg -mt-1" />
               Add to My Trip
             </button>
           </div>
@@ -194,9 +198,9 @@ export default function RecommendationDetail() {
               <button
                 key={dayLabel}
                 onClick={() => handleSelectDay(idx)}
-                className={`py-2 rounded-3xl cursor-pointer outline-[3px] w-[80px] md:w-[100px] ${
+                className={`py-2 rounded-3xl cursor-pointer md:outline-[3px] outline-[2px] w-[50px] md:w-[100px] text-xs md:text-base font-semibold ${
                   selectedDay === dayLabel
-                    ? "outline-black"
+                    ? "outline-black bg-slate-100"
                     : "outline-slate-300"
                 }`}
               >
@@ -248,7 +252,7 @@ export default function RecommendationDetail() {
                       {itinerary[day].map((place) => (
                         <div
                           key={place.slug}
-                          className="place-item flex items-center px-2 py-3 border-b border-slate-300"
+                          className="place-item flex items-center px-2 py-3 border-b border-slate-300 last:border-b-0"
                           data-day={day}
                         >
                           <img
@@ -278,7 +282,7 @@ export default function RecommendationDetail() {
         </div>
 
         {/* Kolom Kanan: Map */}
-        <div className="map-section w-full lg:w-[550px] h-[400px] md:h-[500px] lg:h-[650px] sticky top-1">
+        <div className="map-section w-full lg:w-[400px] h-[400px] md:h-[500px] lg:h-[650px] sticky top-1">
           <MapContainer
             center={[35.6895, 139.6917]}
             zoom={selectedDay ? 16 : 12}
