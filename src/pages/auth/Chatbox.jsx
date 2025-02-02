@@ -54,7 +54,9 @@ export default function Chatbox() {
     };
   return (
     <div className="flex md:mx-auto lg:w-[1300px] md:w-[750px] px-4 md:px-0 min-h-screen">
-      <div className="w-1/3 p-4">
+      <div className="w-1/3 p-4 max-h-screen flex items-center">
+      <div>
+   
     {/* Chat Header */}
     <div className="bg-[#21bcbe] text-white rounded-t-xl h-18 flex items-center px-4 font-bold text-2xl">
       <h2>Chat with Velzy</h2>
@@ -85,9 +87,10 @@ export default function Chatbox() {
       <button onClick={handleSendMessage} className="rounded-full bg-[#21bcbe] p-2 ml-2">
       <IoIosSend className="text-2xl text-white" />
       </button>
+      </div>
     </div>
     </div>
-    <div className="w-2/3 p-4">
+    <div className="w-2/3 p-4 max-h-screen overflow-y-auto">
       <h2 className="text-2xl font-bold mb-10 text-center text-slate-700">
         Destination 
       </h2>
