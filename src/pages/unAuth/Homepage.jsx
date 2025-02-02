@@ -131,7 +131,7 @@ export default function Homepage() {
                 {userReviews.slice(0, 2).map((review) => (
                   <div
                     key={review.id}
-                    className="col-span-1 lg:h-[180px] md:h-[140px] h-[100px]"
+                    className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
                   >
                     <ReviewCard
                       name={review.name}
@@ -145,7 +145,7 @@ export default function Homepage() {
                 {userReviews.slice(2, 5).map((review) => (
                   <div
                     key={review.id}
-                    className="col-span-1 lg:h-[180px] md:h-[140px] h-[100px]"
+                    className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
                   >
                     <ReviewCard
                       name={review.name}
