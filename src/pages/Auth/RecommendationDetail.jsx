@@ -6,6 +6,8 @@ import FitBounds from "../../components/Fitbounds";
 
 export default function RecommendationDetail() {
   const [selectedDay, setSelectedDay] = useState(null);
+  const [lastZoomed, setLastZoomed] = useState(null);
+
   const mapRef = useRef(null);
 
   const itinerary = {
@@ -63,6 +65,42 @@ export default function RecommendationDetail() {
         category: "Points of Interest & Landmarks",
       },
     ],
+    day4: [
+      {
+        id: 5,
+        name: "Imperial Palace",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
+        coordinate: [35.6852, 139.7528],
+        category: "Architectural Buildings",
+      },
+      {
+        id: 6,
+        name: "Ginza",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
+        coordinate: [35.6717, 139.7636],
+        category: "Points of Interest & Landmarks",
+      },
+    ],
+    day5: [
+      {
+        id: 5,
+        name: "Imperial Palace",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
+        coordinate: [35.6852, 139.7528],
+        category: "Architectural Buildings",
+      },
+      {
+        id: 6,
+        name: "Ginza",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
+        coordinate: [35.6717, 139.7636],
+        category: "Points of Interest & Landmarks",
+      },
+    ],
   };
 
   const days = Object.keys(itinerary);
@@ -74,8 +112,49 @@ export default function RecommendationDetail() {
     Array.from({ length: days.length }, () => true)
   );
 
+  const cardRefs = days.map(() => useRef(null));
+
   const handleSelectDay = (index) => {
-    setSelectedDay(selectedDay === days[index] ? null : days[index]);
+    const selectedItinerary = itinerary[days[index]];
+
+    if (!selectedItinerary || selectedItinerary.length === 0) return;
+
+    if (selectedDay === days[index]) {
+      setSelectedDay(null);
+      setLastZoomed(null);
+    } else {
+      setSelectedDay(days[index]);
+
+      const latSum = selectedItinerary.reduce(
+        (sum, place) => sum + place.coordinate[0],
+        0
+      );
+      const lngSum = selectedItinerary.reduce(
+        (sum, place) => sum + place.coordinate[1],
+        0
+      );
+      const center = [
+        latSum / selectedItinerary.length,
+        lngSum / selectedItinerary.length,
+      ];
+
+      if (mapRef.current) {
+        mapRef.current.flyTo(center, 14);
+      }
+
+      if (cardRefs[index].current) {
+        cardRefs[index].current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+
+      setTimeout(() => {
+        if (!collapse[index]) {
+          toggleCollapse(index);
+        }
+      }, 500);
+    }
   };
 
   const toggleCollapse = (index) => {
@@ -83,7 +162,15 @@ export default function RecommendationDetail() {
   };
 
   const zoomToLocation = (coordinates) => {
-    if (mapRef.current) {
+    if (
+      lastZoomed &&
+      lastZoomed[0] === coordinates[0] &&
+      lastZoomed[1] === coordinates[1]
+    ) {
+      setLastZoomed(null);
+      setSelectedDay(null);
+    } else {
+      setLastZoomed(coordinates);
       mapRef.current.flyTo(coordinates, 16);
     }
   };
@@ -166,6 +253,7 @@ export default function RecommendationDetail() {
               <div
                 key={day}
                 className="day-card bg-white/80 mb-2 rounded-lg overflow-hidden shadow"
+                ref={cardRefs[idx]}
               >
                 {/* Header Card */}
                 <div
@@ -176,7 +264,7 @@ export default function RecommendationDetail() {
                   <span
                     className="text-3xl cursor-pointer"
                     onClick={(e) => {
-                      e.stopPropagation(); 
+                      e.stopPropagation();
                       toggleCollapse(idx);
                     }}
                   >
@@ -237,14 +325,16 @@ export default function RecommendationDetail() {
               attribution="&copy; OpenStreetMap contributors"
             />
 
-            <FitBounds
-              markers={
-                selectedDay
-                  ? itinerary[selectedDay]
-                  : [...itinerary.day1, ...itinerary.day2, ...itinerary.day3]
-              }
-              padding={[50, 50]}
-            />
+            {!lastZoomed && (
+              <FitBounds
+                markers={
+                  selectedDay
+                    ? itinerary[selectedDay]
+                    : [...itinerary.day1, ...itinerary.day2, ...itinerary.day3]
+                }
+                padding={[50, 50]}
+              />
+            )}
 
             {(selectedDay
               ? itinerary[selectedDay]
