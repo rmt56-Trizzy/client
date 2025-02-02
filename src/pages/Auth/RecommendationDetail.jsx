@@ -1,118 +1,131 @@
 import "leaflet/dist/leaflet.css";
-import React, { useRef, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import React, { useEffect, useRef, useState } from "react";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import Sortable from "sortablejs";
 import FitBounds from "../../components/Fitbounds";
 
 export default function RecommendationDetail() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [lastZoomed, setLastZoomed] = useState(null);
+  const [itinerary, setItinerary] = useState(() => {
+    const savedItinerary = sessionStorage.getItem("itinerary");
+    return savedItinerary
+      ? JSON.parse(savedItinerary)
+      : {
+          day1: [
+            {
+              id: 1,
+              name: "Senso-ji Temple",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStuk4v4XbgfT9f6EwaGeLueL779qdpDTRHPg&s",
+              coordinate: [35.7148, 139.7967],
+              category: "Religious Sites",
+            },
+            {
+              id: 2,
+              name: "Tokyo Skytree",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6G9PAqpDkzEo_sMoEZgS69zIw-UkJO1gtdw&s",
+              coordinate: [35.71, 139.8107],
+              category: "Architectural Buildings",
+            },
+          ],
+          day2: [
+            {
+              id: 3,
+              name: "Meiji Shrine",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLmgW1cw86-pbW2JgFQmE7HuJIH3PyroFEiw&s",
+              coordinate: [35.6764, 139.6993],
+              category: "Religious Sites",
+            },
+            {
+              id: 4,
+              name: "Shibuya Crossing",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYFc_BBbqG1n6_1GyrLuiYDqPFk8dwqHCI-A&s",
+              coordinate: [35.6595, 139.7005],
+              category: "Points of Interest & Landmarks",
+            },
+          ],
+          day3: [
+            {
+              id: 5,
+              name: "Imperial Palace",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
+              coordinate: [35.6852, 139.7528],
+              category: "Architectural Buildings",
+            },
+            {
+              id: 6,
+              name: "Ginza",
+              image:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
+              coordinate: [35.6717, 139.7636],
+              category: "Points of Interest & Landmarks",
+            },
+          ],
+        };
+  });
 
   const mapRef = useRef(null);
+  const placeRefs = useRef({});
+  const cardRefs = useRef([]);
 
-  const itinerary = {
-    day1: [
-      {
-        id: 1,
-        name: "Senso-ji Temple",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStuk4v4XbgfT9f6EwaGeLueL779qdpDTRHPg&s",
-        coordinate: [35.7148, 139.7967],
-        category: "Religious Sites",
-      },
-      {
-        id: 2,
-        name: "Tokyo Skytree",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6G9PAqpDkzEo_sMoEZgS69zIw-UkJO1gtdw&s",
-        coordinate: [35.71, 139.8107],
-        category: "Architectural Buildings",
-      },
-    ],
-    day2: [
-      {
-        id: 3,
-        name: "Meiji Shrine",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLmgW1cw86-pbW2JgFQmE7HuJIH3PyroFEiw&s",
-        coordinate: [35.6764, 139.6993],
-        category: "Religious Sites",
-      },
-      {
-        id: 4,
-        name: "Shibuya Crossing",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYFc_BBbqG1n6_1GyrLuiYDqPFk8dwqHCI-A&s",
-        coordinate: [35.6595, 139.7005],
-        category: "Points of Interest & Landmarks",
-      },
-    ],
-    day3: [
-      {
-        id: 5,
-        name: "Imperial Palace",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
-        coordinate: [35.6852, 139.7528],
-        category: "Architectural Buildings",
-      },
-      {
-        id: 6,
-        name: "Ginza",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
-        coordinate: [35.6717, 139.7636],
-        category: "Points of Interest & Landmarks",
-      },
-    ],
-    day4: [
-      {
-        id: 5,
-        name: "Imperial Palace",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
-        coordinate: [35.6852, 139.7528],
-        category: "Architectural Buildings",
-      },
-      {
-        id: 6,
-        name: "Ginza",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
-        coordinate: [35.6717, 139.7636],
-        category: "Points of Interest & Landmarks",
-      },
-    ],
-    day5: [
-      {
-        id: 5,
-        name: "Imperial Palace",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
-        coordinate: [35.6852, 139.7528],
-        category: "Architectural Buildings",
-      },
-      {
-        id: 6,
-        name: "Ginza",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
-        coordinate: [35.6717, 139.7636],
-        category: "Points of Interest & Landmarks",
-      },
-    ],
-  };
-
-  const days = Object.keys(itinerary);
-
-  //   const city = "cape town".replaceAll(" ", "+")
-  const city = "Tokyo";
+  const [days, setDays] = useState(Object.keys(itinerary));
 
   const [collapse, setCollapse] = useState(
     Array.from({ length: days.length }, () => true)
   );
 
-  const cardRefs = days.map(() => useRef(null));
+  const toggleCollapse = (index) => {
+    setCollapse((prev) => prev.map((val, i) => (i === index ? !val : val)));
+  };
+
+  useEffect(() => {
+    console.log("test");
+
+    const updatedDays = Object.keys(itinerary);
+    setDays(updatedDays);
+
+    updatedDays.forEach((day) => {
+      const placeItems = placeRefs.current[day];
+      if (placeItems && !placeItems.sortableInstance) {
+        placeItems.sortableInstance = new Sortable(placeItems, {
+          group: "nested",
+          animation: 150,
+          fallbackOnBody: true,
+          swapThreshold: 0.65,
+          onEnd: (evt) => {
+            const { from, to, oldIndex, newIndex } = evt;
+            const fromDay = from.getAttribute("data-day");
+            const toDay = to.getAttribute("data-day");
+
+            if (!fromDay || !toDay) return;
+
+            setItinerary((prev) => {
+              const newItinerary = { ...prev };
+              const movedItem = newItinerary[fromDay].splice(oldIndex, 1)[0];
+              newItinerary[toDay].splice(newIndex, 0, movedItem);
+
+              sessionStorage.setItem("itinerary", JSON.stringify(newItinerary));
+
+              return newItinerary;
+            });
+          },
+        });
+      }
+    });
+  }, [itinerary, collapse]);
+
+  useEffect(() => {
+    const savedItinerary = sessionStorage.getItem("itinerary");
+    if (savedItinerary) {
+      setItinerary(JSON.parse(savedItinerary));
+    }
+  }, []);
 
   const handleSelectDay = (index) => {
     const selectedItinerary = itinerary[days[index]];
@@ -142,8 +155,8 @@ export default function RecommendationDetail() {
         mapRef.current.flyTo(center, 14);
       }
 
-      if (cardRefs[index].current) {
-        cardRefs[index].current.scrollIntoView({
+      if (cardRefs.current[index]) {
+        cardRefs.current[index].scrollIntoView({
           behavior: "smooth",
           block: "start",
         });
@@ -153,13 +166,11 @@ export default function RecommendationDetail() {
         if (!collapse[index]) {
           toggleCollapse(index);
         }
-      }, 500);
+      }, 350);
     }
   };
 
-  const toggleCollapse = (index) => {
-    setCollapse((prev) => prev.map((val, i) => (i === index ? !val : val)));
-  };
+  const city = "Tokyo";
 
   const zoomToLocation = (coordinates) => {
     if (
@@ -253,7 +264,7 @@ export default function RecommendationDetail() {
               <div
                 key={day}
                 className="day-card bg-white/80 mb-2 rounded-lg overflow-hidden shadow"
-                ref={cardRefs[idx]}
+                ref={(el) => (cardRefs.current[idx] = el)}
               >
                 {/* Header Card */}
                 <div
@@ -277,15 +288,17 @@ export default function RecommendationDetail() {
                 </div>
                 {/* Isi Card (Collapsible) */}
                 {collapse[idx] && (
-                  <div className="day-card-body p-3">
+                  <div
+                    className="day-card-body p-3"
+                    ref={(el) => {
+                      placeRefs.current[day] = el;
+                    }}
+                  >
                     {itinerary[day].map((place, i) => (
                       <div
                         key={place.id}
-                        className={`place-item flex items-center px-2 py-3 ${
-                          i !== itinerary[day].length - 1
-                            ? "border-b border-slate-300"
-                            : ""
-                        }`}
+                        className={`place-item flex items-center px-2 py-3 border-b border-slate-300`}
+                        data-day={day}
                       >
                         <img
                           src={place.image}
