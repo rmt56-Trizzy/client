@@ -3,68 +3,69 @@ import TwoTopPlaceCards from "../../components/places/TopPlaceCards";
 import { MdOutlineFlightTakeoff } from "react-icons/md";
 import ReviewCard from "../../components/ReviewCard";
 
+const userReviews = [
+  {
+    id: 1,
+    name: "Yudi",
+    review: `"Trizzy completely changed how I plan my trips! I found the perfect hotels and got a seamless itinerary in minutes."`,
+    img: "/img/review1.jpg",
+  },
+  {
+    id: 2,
+    name: "Josh",
+    review: `"No more endless tabs and notes—Trizzy does it all! It found me a hidden gem of a hotel and crafted the perfect travel plan."`,
+    img: "/img/review2.png",
+  },
+  {
+    id: 3,
+    name: "Jes",
+    review: `"I love how Trizzy personalizes my itinerary! It feels like having a travel agent in my pocket."`,
+    img: "/img/review3.jpg",
+  },
+  {
+    id: 4,
+    name: "Val",
+    review: `"I used to spend hours researching hotels and places to visit. With Trizzy, it's all done in seconds!"`,
+    img: "/img/profile.png",
+  },
+  {
+    id: 5,
+    name: "Bina",
+    review: `"Trizzy took my travel stress away! It’s like having an AI concierge who just gets what I want."`,
+    img: "/img/profile.png",
+  },
+];
+
+const trustedBy = [
+  {
+    id: 1,
+    name: "Booking.com",
+    img: "https://layla.ai/logosArea/Booking.com%20hotel%20booking%20logo.svg",
+  },
+  {
+    id: 2,
+    name: "Get Your Guide",
+    img: "https://layla.ai/logosArea/GetYourGuide.svg",
+  },
+  {
+    id: 3,
+    name: "Perplexity AI",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Perplexity_AI_logo.svg/2560px-Perplexity_AI_logo.svg.png",
+  },
+
+  {
+    id: 4,
+    name: "TripAdvisor",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/TripAdvisor_Logo.svg/2560px-TripAdvisor_Logo.svg.png",
+  },
+  {
+    id: 5,
+    name: "Skyscanner",
+    img: "https://layla.ai/logosArea/Skyscanner%20flight%20finder%20logo.svg",
+  },
+];
+
 export default function Homepage() {
-  const userReviews = [
-    {
-      id: 1,
-      name: "Yudi",
-      review: `"Trizzy completely changed how I plan my trips! I found the perfect hotels and got a seamless itinerary in minutes."`,
-      img: "https://i.ibb.co/SDz0vyfm/review1.jpg",
-    },
-    {
-      id: 2,
-      name: "Josh",
-      review: `"No more endless tabs and notes—Trizzy does it all! It found me a hidden gem of a hotel and crafted the perfect travel plan."`,
-      img: "https://i.ibb.co/v4hkD26c/review2.png",
-    },
-    {
-      id: 3,
-      name: "jes",
-      review: `"I love how Trizzy personalizes my itinerary! It feels like having a travel agent in my pocket."`,
-      img: "https://i.ibb.co/SDz0vyfm/review1.jpg",
-    },
-    {
-      id: 4,
-      name: "Val",
-      review: `"I used to spend hours researching hotels and places to visit. With Trizzy, it's all done in seconds!"`,
-      img: "https://i.ibb.co/SDz0vyfm/review1.jpg",
-    },
-    {
-      id: 5,
-      name: "Bina",
-      review: `"Trizzy took my travel stress away! It’s like having an AI concierge who just gets what I want."`,
-      img: "https://i.ibb.co/SDz0vyfm/review1.jpg",
-    },
-  ];
-
-  const trustedBy = [
-    {
-      id: 1,
-      name: "TripAdvisor",
-      img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/TripAdvisor_Logo.svg/2560px-TripAdvisor_Logo.svg.png",
-    },
-    {
-      id: 2,
-      name: "Get Your Guide",
-      img: "https://layla.ai/logosArea/GetYourGuide.svg",
-    },
-    {
-      id: 3,
-      name: "Perplexity AI",
-      img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Perplexity_AI_logo.svg/2560px-Perplexity_AI_logo.svg.png",
-    },
-
-    {
-      id: 4,
-      name: "Beautiful Destinations",
-      img: "https://layla.ai/logosArea/Beautiful%20Destinations%20travel%20videos%20logo.svg",
-    },
-    {
-      id: 5,
-      name: "Skyscanner",
-      img: "https://layla.ai/logosArea/Skyscanner%20flight%20finder%20logo.svg",
-    },
-  ];
   return (
     <div className="max-w-screen">
       <div className="relative">
