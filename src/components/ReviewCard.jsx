@@ -1,7 +1,5 @@
 import PropTypes from "prop-types";
 export default function ReviewCard({ name, review, img }) {
-  console.log(img, "ini apa bos??");
-
   return (
     <div className="gap-4 bg-[#b0efef] rounded-lg md:text-base text-xs text-black font-semibold  md:p-3 p-2 h-full">
       <div className="flex items-center gap-2 md:gap-3">
