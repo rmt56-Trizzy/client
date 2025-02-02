@@ -65,6 +65,78 @@ export default function RecommendationDetail() {
         category: "Points of Interest & Landmarks",
       },
     ],
+    day4: [
+      {
+        slug: "imperial",
+        name: "Imperial Palace",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
+        coordinate: [35.6852, 139.7528],
+        category: "Architectural Buildings",
+      },
+      {
+        slug: "ginza",
+        name: "Ginza",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
+        coordinate: [35.6717, 139.7636],
+        category: "Points of Interest & Landmarks",
+      },
+    ],
+    day5: [
+      {
+        slug: "imperial",
+        name: "Imperial Palace",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
+        coordinate: [35.6852, 139.7528],
+        category: "Architectural Buildings",
+      },
+      {
+        slug: "ginza",
+        name: "Ginza",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
+        coordinate: [35.6717, 139.7636],
+        category: "Points of Interest & Landmarks",
+      },
+    ],
+    day6: [
+      {
+        slug: "imperial",
+        name: "Imperial Palace",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
+        coordinate: [35.6852, 139.7528],
+        category: "Architectural Buildings",
+      },
+      {
+        slug: "ginza",
+        name: "Ginza",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
+        coordinate: [35.6717, 139.7636],
+        category: "Points of Interest & Landmarks",
+      },
+    ],
+    day7: [
+      {
+        slug: "imperial",
+        name: "Imperial Palace",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
+        coordinate: [35.6852, 139.7528],
+        category: "Architectural Buildings",
+      },
+      {
+        slug: "ginza",
+        name: "Ginza",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
+        coordinate: [35.6717, 139.7636],
+        category: "Points of Interest & Landmarks",
+      },
+    ],
   });
 
   const mapRef = useRef(null);
@@ -154,7 +226,7 @@ export default function RecommendationDetail() {
             />
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-60 rounded-b-lg"></div>
             <div className="absolute bottom-[43px] left-4 bg-opacity-60 px-2 py-1 rounded">
-              <h2 className="text-white text-4xl md:text-5xl font-medium">
+              <h2 className="text-white text-2xl md:text-5xl font-medium">
                 Tokyo for 3 days
               </h2>
             </div>
@@ -182,7 +254,7 @@ export default function RecommendationDetail() {
           </div>
 
           {/* Itinerary Header */}
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex justify-between items-center mb-2 border-b md:border-b-2 border-gray-300 pb-4">
             <h3 className="text-xl md:text-2xl font-semibold">Itinerary</h3>
             <button className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
               <TbMapPinPlus className="text-sm md:text-base lg:text-lg -mt-1" />
@@ -190,23 +262,23 @@ export default function RecommendationDetail() {
             </button>
           </div>
 
-          <hr className="my-4" />
-
           {/* Tombol Day */}
-          <div className="day-buttons flex flex-wrap gap-3.5 mb-4 py-2">
-            {days.map((dayLabel, idx) => (
-              <button
-                key={dayLabel}
-                onClick={() => handleSelectDay(idx)}
-                className={`py-2 rounded-3xl cursor-pointer md:outline-[3px] outline-[2px] w-[50px] md:w-[100px] text-xs md:text-base font-semibold ${
-                  selectedDay === dayLabel
-                    ? "outline-black bg-slate-100"
-                    : "outline-slate-300"
-                }`}
-              >
-                {`Day ${idx + 1}`}
-              </button>
-            ))}
+          <div className="day-buttons flex gap-3.5 mb-4 px-2 overflow-x-auto whitespace-nowrap custom-scrollbar">
+            <div className="flex gap-3.5 pt-2 pb-4">
+              {days.map((dayLabel, idx) => (
+                <button
+                  key={dayLabel}
+                  onClick={() => handleSelectDay(idx)}
+                  className={`py-2 rounded-3xl cursor-pointer md:outline-[3px] outline-[2px] w-[50px] md:w-[100px] text-xs md:text-base font-semibold ${
+                    selectedDay === dayLabel
+                      ? "outline-black bg-slate-100"
+                      : "outline-slate-300"
+                  }`}
+                >
+                  {`Day ${idx + 1}`}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Cards Itinerary */}

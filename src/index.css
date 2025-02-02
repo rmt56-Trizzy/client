@@ -4,13 +4,34 @@ body {
   font-family: "Lexend", serif;
 }
 
-/* Untuk semua elemen dengan scrollbar */
+.custom-scrollbar {
+  overflow-x-auto !important; 
+}
+
 ::-webkit-scrollbar {
-  display: none; /* Untuk Chrome, Safari */
+  display: block; 
 }
 
 html,
 body {
-  scrollbar-width: none; /* Untuk Firefox */
-  -ms-overflow-style: none; /* Untuk Internet Explorer dan Edge */
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px !important; 
+  height: 8px !important; 
+  display: block !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #21bcbe !important; 
+  border-radius: 2px !important; 
+  display: block !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 2px !important;
+  display: block !important;
 }
