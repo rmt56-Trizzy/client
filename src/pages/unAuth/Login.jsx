@@ -7,6 +7,7 @@ import Lottie from "lottie-react";
 import { gql, useMutation } from "@apollo/client";
 import { toastError } from "../../utils/swallAlert";
 import loadingAnimation from "../../animations/loading.json";
+import { motion } from "framer-motion";
 
 const LOGIN = gql`
   mutation Login($login: LoginInput) {
@@ -84,7 +85,12 @@ export default function Login() {
   }, [input]);
 
   return (
-    <div className="mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-0 lg:w-[550px] flex justify-center items-center min-h-screen py-4">
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.5 }}
+      className="mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-0 lg:w-[550px] flex justify-center items-center min-h-screen py-4"
+    >
       <div className="border border-gray-100 rounded-lg shadow-xl w-full p-4 sm:p-6 md:p-8 lg:p-10">
         <div className="space-y-6">
           <div>
@@ -185,6 +191,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

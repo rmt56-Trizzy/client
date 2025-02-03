@@ -5,13 +5,19 @@ import {
   FaGithub,
   FaLinkedin,
 } from "react-icons/fa6";
+import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
     <footer className="bg-white text-gray-900 md:py-10 py-6 border-t border-gray-200">
       <div className="container mx-auto px-6 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 lg:py-10 md:py-6 md:grid-cols-3 gap-8">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -350 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
             <h2 className="md:text-4xl lg:text-5xl text-2xl text-slate-700 font-bold">
               Trizzy
             </h2>
@@ -19,9 +25,15 @@ export default function Footer() {
               Your ultimate AI-powered travel planner. Discover the best hotels
               and itineraries effortlessly.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col md:items-center text-sm md:text-base">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:items-center text-sm md:text-base"
+          >
             <h3 className="md:text-2xl text-base font-semibold">Quick Links</h3>
             <ul className="md:mt-3 mt-2 space-y-2">
               <li>
@@ -45,9 +57,14 @@ export default function Footer() {
                 </button>
               </li>
             </ul>
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: 400 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
             <h3 className="md:text-2xl text-base font-semibold">
               Sign up for our newsletter
             </h3>
@@ -64,14 +81,26 @@ export default function Footer() {
                 Subscribe
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         <div className="mt-10 flex flex-col md:flex-row justify-between text-xl md:text-2xl lg:text-3xl items-center border-t border-gray-300 pt-6">
-          <p className="text-gray-600 lg:text-base text-sm">
+          <motion.p
+            initial={{ opacity: 0, x: -400 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-gray-600 lg:text-base text-sm"
+          >
             &copy; 2025 Trizzy. All rights reserved.
-          </p>
-          <div className="flex space-x-4 mt-4 md:mt-0 ">
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, x: 400 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="flex space-x-4 mt-4 md:mt-0 "
+          >
             <a
               href="https://github.com/rmt56-Trizzy"
               className="text-gray-600 hover:text-teal-500"
@@ -112,7 +141,7 @@ export default function Footer() {
             >
               <FaLinkedin />
             </a>
-          </div>
+          </motion.div>
         </div>
       </div>
     </footer>
