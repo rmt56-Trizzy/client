@@ -7,9 +7,8 @@ export default function ChatPage() {
     <div className="flex lg:flex-row flex-col md:mx-auto lg:container px-4 lg:pb-20 py-5 md:pb-0 min-h-[95vh] lg:min-h-0 md:px-0 justify-center lg:my-0 md:mb-2">
       <motion.div
         initial={{ opacity: 0, x: -200 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        viewport={{ once: true }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, delay: 0.3 }}
         className="lg:w-1/3 md:w-[500px] px-4 lg:mx-0 justify-center flex items-center md:mx-auto"
       >
         <ChatBox />
@@ -17,9 +16,8 @@ export default function ChatPage() {
 
       <motion.div
         initial={{ opacity: 0, x: 200 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        viewport={{ once: true }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, delay: 0.3 }}
         className="lg:w-2/3 mx-auto  px-4 w-[280px] md:w-[700px] justify-center lg:flex-col"
       >
         <h2 className="md:text-3xl text-xl my-4 font-bold md:my-10 text-center text-slate-700">

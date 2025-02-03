@@ -162,7 +162,7 @@ export default function Homepage() {
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[100px]"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
               viewport={{ once: true }}
             >
               <TopPlaceCard topPlaces={item} />
@@ -176,7 +176,7 @@ export default function Homepage() {
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[90px]"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
               viewport={{ once: true }}
             >
               <TopPlaceCard topPlaces={item} />
@@ -188,7 +188,7 @@ export default function Homepage() {
             className="font-bold"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
           >
             Simplify your travel using our trip planner AI
@@ -196,7 +196,7 @@ export default function Homepage() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
             className="font-base md:text-base text-xs md:mt-10 mt-5 md:px-10"
           >
@@ -213,7 +213,7 @@ export default function Homepage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
             className="flex rounded-lg md:w-[330px] w-[180px] md:mt-10 mt-5 bg-slate-700 text-white mx-auto gap-3 justify-center items-center"
           >
@@ -230,7 +230,7 @@ export default function Homepage() {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
               viewport={{ once: true }}
               className="lg:text-6xl md:text-4xl text-xl md:w-[450px] font-bold lg:w-[700px] text-center w-[250px] mx-auto"
             >
@@ -242,7 +242,7 @@ export default function Homepage() {
                   <motion.div
                     initial={{ opacity: 0, x: 200 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, delay: 0.2 }}
+                    transition={{ duration: 1, delay: 0.3 }}
                     viewport={{ once: true }}
                     key={review.id}
                     className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
@@ -261,7 +261,7 @@ export default function Homepage() {
                     key={review.id}
                     initial={{ opacity: 0, x: -100 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, delay: 0.2 }}
+                    transition={{ duration: 1, delay: 0.3 }}
                     viewport={{ once: true }}
                     className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
                   >
@@ -281,7 +281,7 @@ export default function Homepage() {
         <motion.p
           initial={{ opacity: 0, x: 200 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
+          transition={{ duration: 1, delay: 0.3 }}
           viewport={{ once: true }}
           className="font-bold text-center md:text-4xl lg:text-5xl text-xl "
         >
@@ -294,7 +294,7 @@ export default function Homepage() {
                 <motion.img
                   initial={{ opacity: 0, x: -100 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 1, delay: 0.2 }}
+                  transition={{ duration: 1, delay: 0.3 }}
                   viewport={{ once: true }}
                   src={item.img}
                   alt={item.name}
@@ -309,7 +309,7 @@ export default function Homepage() {
                 <motion.img
                   initial={{ opacity: 0, x: 200 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 1, delay: 0.2 }}
+                  transition={{ duration: 1, delay: 0.3 }}
                   viewport={{ once: true }}
                   src={item.img}
                   alt={item.name}
