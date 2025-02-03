@@ -5,15 +5,30 @@ import { MdClose } from "react-icons/md";
 import { NavLink, useNavigate } from "react-router";
 import ProfileModal from "./ProfileModal";
 import { toastSuccess } from "../utils/swallAlert";
+import { gql, useQuery } from "@apollo/client";
+
+const GET_USER_BY_ID = gql`
+  query Query($id: ID!) {
+    getUserById(_id: $id) {
+      _id
+      fullName
+    }
+  }
+`;
 
 export default function Navbar() {
   const [isLogin, setIsLogin] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModalProfileOpen, setIsModalProfileOpen] = useState(false);
+  const [userData, setUserData] = useState({});
+
+  const { data } = useQuery(GET_USER_BY_ID, {
+    variables: { id: localStorage.getItem("userId") },
+  });
 
   const navigate = useNavigate();
-
   const token = localStorage.getItem("access_token");
+
   useEffect(() => {
     if (token) {
       setIsLogin(true);
@@ -24,14 +39,20 @@ export default function Navbar() {
 
   const handelLogout = () => {
     localStorage.removeItem("access_token");
-    toastSuccess("Logout Success");
+    toastSuccess("Logout successfully");
     setIsLogin(false);
     navigate("/login");
   };
 
+  useEffect(() => {
+    if (data) {
+      setUserData(data.getUserById);
+    }
+  }, [data]);
+
   return (
     <div className="md:h-[67px] h-10 border-b-1 border-gray-300 sticky top-0 z-50 bg-white">
-      <motion.div className="mx-auto lg:px-12 md:px-10 flex items-center justify-between h-full px-4">
+      <motion.div className="mx-auto w-full max-w-screen-xl  flex items-center justify-between h-full px-4 md:px-10 lg:px-12">
         <NavLink to={"/"} className={"me-auto"}>
           <motion.img
             initial={{
@@ -78,7 +99,7 @@ export default function Navbar() {
           </div>
           <div>
             <button
-              className="md:hidden flex flex-col w-9 justify-center items-center gap-1 p-2 cursor-pointer"
+              className="md:hidden flex flex-col max-w-screen w-7 justify-center items-center gap-1 p-2 cursor-pointer"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? (
@@ -96,7 +117,7 @@ export default function Navbar() {
         />
         <motion.div
           initial={{
-            x: 500,
+            x: 20,
             opacity: 0,
             scale: 0.5,
           }}
@@ -130,7 +151,7 @@ export default function Navbar() {
                     alt="profile-image"
                     className="w-9 h-9 rounded-full"
                   />
-                  <p className="text-xs lg:text-sm">Profile Name</p>
+                  <p className="text-xs lg:text-sm">{userData.fullName}</p>
                 </div>
               </button>
             </div>
@@ -160,7 +181,7 @@ export default function Navbar() {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, x: "100%" }}
+              initial={{ opacity: 0, x: 200 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
               transition={{ duration: 1, ease: "easeInOut" }}

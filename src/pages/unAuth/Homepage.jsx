@@ -3,6 +3,8 @@ import TopPlaceCard from "../../components/places/TopPlaceCard";
 import { MdOutlineFlightTakeoff } from "react-icons/md";
 import ReviewCard from "../../components/ReviewCard";
 import { motion } from "framer-motion";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
 
 const userReviews = [
   {
@@ -66,61 +68,57 @@ const trustedBy = [
   },
 ];
 
-const topPlace = {
-  data: {
-    getGeneralRecommendations: [
-      {
-        _id: "679f8462d914738fbc1e1515",
-        city: "Jakarta",
-        country: "Indonesia",
-        countryCode: "ID",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2024/02/Jakarta-Kota-Tua-Jakarta-old-town-1050x700.jpg",
-        daysCount: 3,
-      },
-      {
-        _id: "679f8462d914738fbc1e1516",
-        city: "Seoul",
-        country: "South Korea",
-        countryCode: "KR",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2024/08/Namsan-Tower-during-autumn-in-Seoul-South-Korea.jpg",
-        daysCount: 4,
-      },
-      {
-        _id: "679f8462d914738fbc1e1517",
-        city: "Tokyo",
-        country: "Japan",
-        countryCode: "JP",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2018/07/Experience-Tokyo_landmarks_Tokyo-Tower.jpg",
-        daysCount: 5,
-      },
-      {
-        _id: "679f8462d914738fbc1e1518",
-        city: "London",
-        country: "United Kingdom",
-        countryCode: "GB",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2020/05/Featured-photo-aerial-of-River-Thames-Things-to-do-in-London-UK.jpg",
-        daysCount: 4,
-      },
-      {
-        _id: "679f8462d914738fbc1e1519",
-        city: "Bangkok",
-        country: "Thailand",
-        countryCode: "TH",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2018/06/experiences_thailand_bangkok_wat-phra-kaew.jpg",
-        daysCount: 3,
-      },
-    ],
-  },
-};
+const GET_GENERAL_RECOMMENDATIONS = gql`
+  query GetGeneralRecommendations {
+    getGeneralRecommendations {
+      _id
+      city
+      country
+      countryCode
+      cityImage
+      daysCount
+    }
+  }
+`;
+
+const CREATE_CHAT = gql`
+  mutation Mutation($payload: CreateChatInput) {
+    createChat(payload: $payload) {
+      _id
+      userId
+      messages {
+        sender
+        message
+      }
+    }
+  }
+`;
 
 export default function Homepage() {
+  const [topPlaces, setTopPlaces] = useState([]);
+  const [chat, setChat] = useState("");
+  const { data } = useQuery(GET_GENERAL_RECOMMENDATIONS);
+  const [createChat] = useMutation(CREATE_CHAT, {
+    onCompleted: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleCreateMessage = (e) => {
+    e.preventDefaut();
+    createChat;
+  };
+  useEffect(() => {
+    if (data) {
+      setTopPlaces(data.getGeneralRecommendations);
+    }
+  }, [data]);
+
   return (
-    <div className="max-w-screen">
+    <div className="max-w-screen overflow-hidden md:overflow-visible">
       <div className="relative">
         <motion.img
           src="/img/banner.jpg"
@@ -148,36 +146,33 @@ export default function Homepage() {
       <motion.div
         className="md:mt-24 mt-19 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0"
         initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
       >
         <p className="lg:text-3xl md:text-2xl text-xl font-bold text-slate-700">
           Top Places to Visit
         </p>
         <div className="grid grid-cols-2 md:gap-5 gap-2 mt-5">
-          {topPlace.data.getGeneralRecommendations.slice(0, 2).map((item) => (
+          {topPlaces.slice(0, 2).map((item) => (
             <motion.div
               key={item._id}
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[100px]"
               initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
             >
               <TopPlaceCard topPlaces={item} />
             </motion.div>
           ))}
         </div>
         <div className="grid grid-cols-3 md:gap-5 gap-2 md:mt-5 mt-2">
-          {topPlace.data.getGeneralRecommendations.slice(2, 5).map((item) => (
+          {topPlaces.slice(2, 5).map((item) => (
             <motion.div
               key={item._id}
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[90px]"
               initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
             >
               <TopPlaceCard topPlaces={item} />
             </motion.div>
@@ -228,22 +223,24 @@ export default function Homepage() {
         <div className="md:mt-16 mt-4 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0">
           <div className="lg:py-20 py-10">
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 100 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 1, delay: 0.3 }}
               viewport={{ once: true }}
               className="lg:text-6xl md:text-4xl text-xl md:w-[450px] font-bold lg:w-[700px] text-center w-[250px] mx-auto"
             >
               Cool things people have said about Trizzy
             </motion.p>
             <div className="md:mt-10 lg:mt-18 mt-8">
-              <div className="grid lg:grid-cols-2 grid-cols-1  md:gap-5 gap-2">
+              <motion.div
+                initial={{ opacity: 0, x: 100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="grid lg:grid-cols-2 grid-cols-1  md:gap-5 gap-2"
+              >
                 {userReviews.slice(0, 2).map((review) => (
-                  <motion.div
-                    initial={{ opacity: 0, x: 200 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    viewport={{ once: true }}
+                  <div
                     key={review.id}
                     className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
                   >
@@ -252,17 +249,19 @@ export default function Homepage() {
                       review={review.review}
                       img={review.img}
                     />
-                  </motion.div>
+                  </div>
                 ))}
-              </div>
-              <div className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-2 md:mt-5 mt-2">
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-2 md:mt-5 mt-2"
+              >
                 {userReviews.slice(2, 5).map((review) => (
-                  <motion.div
+                  <div
                     key={review.id}
-                    initial={{ opacity: 0, x: -100 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    viewport={{ once: true }}
                     className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
                   >
                     <ReviewCard
@@ -270,16 +269,16 @@ export default function Homepage() {
                       review={review.review}
                       img={review.img}
                     />
-                  </motion.div>
+                  </div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </motion.div>
       <div className="lg:my-24 md:my-14 my-4 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0 text-slate-700">
         <motion.p
-          initial={{ opacity: 0, x: 200 }}
+          initial={{ opacity: 0, x: 100 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
           viewport={{ once: true }}
@@ -307,7 +306,7 @@ export default function Homepage() {
             {trustedBy.slice(3, 5).map((item) => (
               <div key={item.id} className="flex justify-center items-center">
                 <motion.img
-                  initial={{ opacity: 0, x: 200 }}
+                  initial={{ opacity: 0, x: 100 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1, delay: 0.3 }}
                   viewport={{ once: true }}

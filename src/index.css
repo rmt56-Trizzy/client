@@ -5,28 +5,29 @@ body {
 }
 
 .custom-scrollbar {
-  overflow-x-auto !important; 
+  max-width: 100%;
+  overflow-x: auto !important;
 }
 
 ::-webkit-scrollbar {
-  display: block; 
+  display: block;
 }
 
 html,
 body {
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px !important; 
-  height: 8px !important; 
+  width: 8px !important;
+  height: 8px !important;
   display: block !important;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #21bcbe !important; 
-  border-radius: 2px !important; 
+  background-color: #21bcbe !important;
+  border-radius: 2px !important;
   display: block !important;
 }
 

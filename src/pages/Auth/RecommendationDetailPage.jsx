@@ -214,13 +214,13 @@ export default function RecommendationDetailPage() {
   };
 
   return (
-    <div className="max-w-[63rem] mx-auto md:pt-8 pt-4 pb-12 px-4">
+    <div className="max-w-[63rem] mx-auto md:pt-8 pt-4 pb-12 px-4 overflow-hidden md:overflow-visible">
       <div className="grid grid-cols-1 lg:grid-cols-[550px_1fr] gap-8">
         {/* Kolom Kiri */}
         <motion.div
-          initial={{ opacity: 0, x: -200 }}
+          initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
+          transition={{ duration: 1, delay: 0.4 }}
           className="left-column"
         >
           {/* Thumbnail */}
@@ -361,7 +361,7 @@ export default function RecommendationDetailPage() {
 
         {/* Kolom Kanan: Map */}
         <motion.div
-          initial={{ opacity: 0, x: 200 }}
+          initial={{ opacity: 0, x: 100 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
