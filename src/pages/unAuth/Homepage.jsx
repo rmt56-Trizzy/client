@@ -26,7 +26,7 @@ const userReviews = [
     id: 4,
     name: "Val",
     review: `"I used to spend hours researching hotels and places to visit. With Trizzy, it's all done in seconds!"`,
-    img: "/img/profile.png",
+    img: "/img/review4.jpg",
   },
   {
     id: 5,

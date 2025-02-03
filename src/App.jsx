@@ -16,7 +16,6 @@ import ProfilePage from "./pages/auth/ProfilePage";
 
 import Chatbox from "./pages/auth/Chatbox";
 
-
 function App() {
   return (
     <>
@@ -33,14 +32,14 @@ function App() {
                   <Route path="/chat" element={<Chatbox />} />
                   <Route path="/pay" element={<PaymentPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route
+                    path="/recommendation/:id"
+                    element={<RecommendationDetail />}
+                  />
                 </Route>
               </Route>
               <Route element={<MainPageLayout />}>
                 <Route path="/" element={<Homepage />} />
-                <Route
-                  path="/recommendation/:id"
-                  element={<RecommendationDetail />}
-                />
               </Route>
             </Routes>
           </BrowserRouter>
