@@ -9,9 +9,9 @@ import { TbCalendarPlus } from "react-icons/tb";
 import { motion } from "framer-motion";
 import { gql } from "@apollo/client";
 
-export const GENERATE_RECOMMEND_DETAIL = gql`
-mutation GenerateRecommendationDetails($recommendationId: ID!) {
-  generateRecommendationDetails(recommendationId: $recommendationId) {
+export const GET_GEN_RECOMMEND_DETAIL = gql`
+query GetGeneralRecommendationDetails($id: ID!) {
+  getGeneralRecommendationDetails(_id: $id) {
     _id
     city
     country
@@ -28,40 +28,13 @@ mutation GenerateRecommendationDetails($recommendationId: ID!) {
         coordinates
       }
     }
-    chatId
-    userId
-    viewAccess
   }
 }
 `
 
-export const GET_RECOMMEND_DETAIL = gql`
-query GetRecommendationDetails($id: ID!) {
-  getRecommendationDetails(_id: $id) {
-    _id
-    city
-    country
-    countryCode
-    cityImage
-    daysCount
-    itineraries {
-      day
-      locations {
-        slug
-        name
-        image
-        category
-        coordinates
-      }
-    }
-    userId
-    viewAccess
-  }
-}
-`
-export const ADD_RECOMMEND_TO_MY_TRIP = gql`
-mutation AddRecommendationToMyTrip($recommendationId: ID!) {
-  addRecommendationToMyTrip(recommendationId: $recommendationId)
+export const ADD_GEN_REC_TO_MY_TRIP = gql`
+mutation AddGeneralRecommendationToMyTrip($generalRecommendationId: ID!) {
+  addGeneralRecommendationToMyTrip(generalRecommendationId: $generalRecommendationId)
 }
 `
 
@@ -104,7 +77,7 @@ mutation EditItinerary($payload: EditInput) {
 `
 
 
-export default function RecommendationDetailPage() {
+export default function GeneralRecommendationDetailPage() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [lastZoomed, setLastZoomed] = useState(null);
   const [itinerary, setItinerary] = useState({

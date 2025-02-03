@@ -1,19 +1,19 @@
-import { Route } from "react-router";
-import { BrowserRouter, Routes } from "react-router";
-import Homepage from "./pages/unAuth/Homepage";
-import Login from "./pages/unAuth/Login";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import Register from "./pages/unAuth/Register";
-import MainPageLayout from "./layouts/MainPageLayout";
-import RecommendationDetailPage from "./pages/auth/RecommendationDetailPage";
 import { ApolloProvider } from "@apollo/client";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { BrowserRouter, Route, Routes } from "react-router";
 import client from "./config/apolllo";
+import AuthLayout from "./layouts/AuthLayout";
+import MainPageLayout from "./layouts/MainPageLayout";
 import UnAuthLayout from "./layouts/UnAuthLayout";
 import PaymentPage from "./pages/auth/PaymentPage";
-import AuthLayout from "./layouts/AuthLayout";
+import Homepage from "./pages/unAuth/Homepage";
+import Login from "./pages/unAuth/Login";
+import Register from "./pages/unAuth/Register";
 
-import ProfilePage from "./pages/auth/ProfilePage";
 import ChatPage from "./pages/auth/ChatPage";
+import ProfilePage from "./pages/auth/ProfilePage";
+import RecommendationDetailPage from "./pages/Auth/RecommendationDetailPage";
+import GeneralRecommendationDetailPage from "./pages/unAuth/GenRecommendationDetailPage";
 
 function App() {
   return (
@@ -31,14 +31,18 @@ function App() {
                   <Route path="/chat" element={<ChatPage />} />
                   <Route path="/pay" element={<PaymentPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
-                  <Route
-                    path="/recommendation/:id"
-                    element={<RecommendationDetailPage />}
-                  />
+                <Route
+                  path="/recommendation/:id"
+                  element={<RecommendationDetailPage />}
+                />
                 </Route>
               </Route>
               <Route element={<MainPageLayout />}>
                 <Route path="/" element={<Homepage />} />
+                <Route
+                  path="/generalrecommendation/:id"
+                  element={<GeneralRecommendationDetailPage />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>
