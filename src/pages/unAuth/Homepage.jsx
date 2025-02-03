@@ -224,13 +224,7 @@ export default function Homepage() {
           </motion.div>
         </div>
       </motion.div>
-      <motion.div
-        initial={{ opacity: 0, x: -400 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 0.2 }}
-        viewport={{ once: true }}
-        className="bg-[#21bcbe] text-white"
-      >
+      <motion.div className="bg-[#21bcbe] text-white">
         <div className="md:mt-16 mt-4 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0">
           <div className="lg:py-20 py-10">
             <motion.p
@@ -248,7 +242,7 @@ export default function Homepage() {
                   <motion.div
                     initial={{ opacity: 0, x: 200 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
+                    transition={{ duration: 1, delay: 0.2 }}
                     viewport={{ once: true }}
                     key={review.id}
                     className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
@@ -267,7 +261,7 @@ export default function Homepage() {
                     key={review.id}
                     initial={{ opacity: 0, x: -100 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
+                    transition={{ duration: 1, delay: 0.2 }}
                     viewport={{ once: true }}
                     className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
                   >

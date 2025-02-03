@@ -13,9 +13,9 @@ export default function Footer() {
       <div className="container mx-auto px-6 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 lg:py-10 md:py-6 md:grid-cols-3 gap-8">
           <motion.div
-            initial={{ opacity: 0, x: -500 }}
+            initial={{ opacity: 0, x: -350 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            transition={{ duration: 1, delay: 0.4 }}
             viewport={{ once: true }}
           >
             <h2 className="md:text-4xl lg:text-5xl text-2xl text-slate-700 font-bold">
@@ -30,7 +30,7 @@ export default function Footer() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            transition={{ duration: 1, delay: 0.4 }}
             viewport={{ once: true }}
             className="flex flex-col md:items-center text-sm md:text-base"
           >
@@ -60,9 +60,9 @@ export default function Footer() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 500 }}
+            initial={{ opacity: 0, x: 400 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            transition={{ duration: 1, delay: 0.4 }}
             viewport={{ once: true }}
           >
             <h3 className="md:text-2xl text-base font-semibold">
@@ -86,7 +86,7 @@ export default function Footer() {
 
         <div className="mt-10 flex flex-col md:flex-row justify-between text-xl md:text-2xl lg:text-3xl items-center border-t border-gray-300 pt-6">
           <motion.p
-            initial={{ opacity: 0, x: -500 }}
+            initial={{ opacity: 0, x: -400 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
             viewport={{ once: true }}
@@ -95,7 +95,7 @@ export default function Footer() {
             &copy; 2025 Trizzy. All rights reserved.
           </motion.p>
           <motion.div
-            initial={{ opacity: 0, x: 500 }}
+            initial={{ opacity: 0, x: 400 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
             viewport={{ once: true }}

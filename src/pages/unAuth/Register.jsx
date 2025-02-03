@@ -9,6 +9,7 @@ import { gql, useMutation } from "@apollo/client";
 import { toastError, toastSuccess } from "../../utils/swallAlert";
 import loadingAnimation from "../../animations/loading.json";
 import { GOOGLE_LOGIN } from "./Login";
+import { motion } from "framer-motion";
 
 const REGISTER = gql`
   mutation Mutation($input: RegisterInput) {
@@ -101,7 +102,12 @@ export default function Register() {
   };
 
   return (
-    <div className="mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-0 lg:w-[550px] flex justify-center items-center min-h-screen py-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.5 }}
+      className="mx-auto w-full px-4 sm:px-6 md:px-8 lg:px-0 lg:w-[550px] flex justify-center items-center min-h-screen py-4"
+    >
       <div className="border border-gray-100 rounded-lg shadow-xl w-full p-4 sm:p-6 md:p-8 lg:p-10">
         {!isNext ? (
           <div className="space-y-6">
@@ -176,7 +182,11 @@ export default function Register() {
             </div>
           </div>
         ) : (
-          <>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+          >
             <div>
               <button className="cursor-pointer" onClick={handleBack}>
                 <IoIosArrowDropleft className="md:text-4xl text-2xl text-gray-500 hover:text-blue-500" />
@@ -221,9 +231,21 @@ export default function Register() {
                 />
               </div>
             </form>
-
+            <div className="mt-10 flex items-center gap-4">
+              <input
+                type="checkbox"
+                className="w-8 h-8 accent-green-500"
+                value={isAgreeToTerms}
+                onChange={() => setIsAgreeToTerms(!isAgreeToTerms)}
+              />
+              <label className="md:text-sm md:mt-10 text-xs text-gray-500">
+                I agree to receive updates and promotions about Agoda and its
+                affiliates or business partners via various channels, including
+                WhatsApp. Opt out anytime. Read more in the Privacy Policy.
+              </label>
+            </div>
             {isRegisterValid ? (
-              <div className="mt-10 md:mt-20">
+              <div className="mt-10">
                 {loading ? (
                   <button className="rounded-4xl md:h-11.5 h-9.5 border mt-2 md:mt-4 border-gray-300 transition-all duration-300 cursor-pointer font-semibold hover:bg-blue-50 text-blue-500 w-full py-1.5 sm:py-2.5 hover:border-blue-500">
                     <div className="md:w-10 w-8.5 mx-auto -mt-1 md:-mt-2">
@@ -240,26 +262,13 @@ export default function Register() {
                 )}
               </div>
             ) : (
-              <div className="mt-10 md:mt-20">
+              <div className="mt-10">
                 <button className="rounded-4xl border mt-2 md:mt-4 border-gray-300 font-semibold text-gray-300 w-full py-1.5 sm:py-2.5 bg-blue-50">
                   Register
                 </button>
               </div>
             )}
 
-            <div className="mt-10 flex items-center gap-4">
-              <input
-                type="checkbox"
-                className="w-8 h-8 accent-green-500"
-                value={isAgreeToTerms}
-                onChange={() => setIsAgreeToTerms(!isAgreeToTerms)}
-              />
-              <label className="md:text-sm text-xs text-gray-500">
-                I agree to receive updates and promotions about Agoda and its
-                affiliates or business partners via various channels, including
-                WhatsApp. Opt out anytime. Read more in the Privacy Policy.
-              </label>
-            </div>
             <div className="mt-10 mb-2 md:mb-0">
               <p className="text-xs text-gray-500 mt-4 text-center">
                 By signing in, I agree to Agoda&apos;s{" "}
@@ -267,9 +276,9 @@ export default function Register() {
                 <span className="text-blue-500">Privacy Policy.</span>
               </p>
             </div>
-          </>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
