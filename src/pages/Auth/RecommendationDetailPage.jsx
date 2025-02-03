@@ -7,7 +7,7 @@ import { ReactSortable } from "react-sortablejs";
 import { TbMapPinPlus } from "react-icons/tb";
 import { TbCalendarPlus } from "react-icons/tb";
 
-export default function RecommendationDetail() {
+export default function RecommendationDetailPage() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [lastZoomed, setLastZoomed] = useState(null);
   const [itinerary, setItinerary] = useState({

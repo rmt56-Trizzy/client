@@ -1,5 +1,5 @@
 import CardChatBox from "../../components/AI/CardChatBox";
-import TwoTopPlaceCards from "../../components/places/TopPlaceCards";
+import TopPlaceCard from "../../components/places/TopPlaceCard";
 import { MdOutlineFlightTakeoff } from "react-icons/md";
 import ReviewCard from "../../components/ReviewCard";
 
@@ -80,21 +80,21 @@ export default function Homepage() {
         </p>
         <div className="grid grid-cols-2 md:gap-5 gap-2 mt-5">
           <div className="col-span-1 lg:h-[270px] md:h-[190px] h-[100px]">
-            <TwoTopPlaceCards />
+            <TopPlaceCard />
           </div>
           <div className="col-span-1 lg:h-[270px] md:h-[190px] h-[100px]">
-            <TwoTopPlaceCards />
+            <TopPlaceCard />
           </div>
         </div>
         <div className="grid grid-cols-3 md:gap-5 gap-2 md:mt-5 mt-2">
           <div className="col-span-1 lg:h-[270px] md:h-[190px] h-[90px]">
-            <TwoTopPlaceCards />
+            <TopPlaceCard />
           </div>
           <div className="col-span-1 lg:h-[270px] md:h-[190px] h-[90px]">
-            <TwoTopPlaceCards />
+            <TopPlaceCard />
           </div>
           <div className="col-span-1 lg:h-[270px] md:h-[190px] h-[90px]">
-            <TwoTopPlaceCards />
+            <TopPlaceCard />
           </div>
         </div>
         <div className="mt-10 md:mt-15 lg:mt-18 md:text-5xl lg:text-6xl text-2xl font-semibold text-center text-slate-700">
