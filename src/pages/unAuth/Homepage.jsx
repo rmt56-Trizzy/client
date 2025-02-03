@@ -5,6 +5,7 @@ import ReviewCard from "../../components/ReviewCard";
 import { motion } from "framer-motion";
 import { gql, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import LoadingPage from "../../components/LoadingPage";
 
 const userReviews = [
   {
@@ -83,13 +84,14 @@ const GET_GENERAL_RECOMMENDATIONS = gql`
 
 export default function Homepage() {
   const [topPlaces, setTopPlaces] = useState([]);
-  const { data } = useQuery(GET_GENERAL_RECOMMENDATIONS);
+  const { data, loading } = useQuery(GET_GENERAL_RECOMMENDATIONS);
 
   useEffect(() => {
     if (data) {
       setTopPlaces(data.getGeneralRecommendations);
     }
   }, [data]);
+  if (loading) return <LoadingPage />;
 
   return (
     <div className="max-w-screen overflow-hidden md:overflow-visible">
