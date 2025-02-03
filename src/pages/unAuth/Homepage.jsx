@@ -91,7 +91,7 @@ export default function Homepage() {
       setTopPlaces(data.getGeneralRecommendations);
     }
   }, [data]);
-  if (loading) return <LoadingPage />;
+  if (!loading) return <LoadingPage />;
 
   return (
     <div className="max-w-screen overflow-hidden md:overflow-visible">
