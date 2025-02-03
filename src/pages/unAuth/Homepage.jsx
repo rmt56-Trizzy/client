@@ -3,7 +3,7 @@ import TopPlaceCard from "../../components/places/TopPlaceCard";
 import { MdOutlineFlightTakeoff } from "react-icons/md";
 import ReviewCard from "../../components/ReviewCard";
 import { motion } from "framer-motion";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 
 const userReviews = [
@@ -81,10 +81,36 @@ const GET_GENERAL_RECOMMENDATIONS = gql`
   }
 `;
 
+const CREATE_CHAT = gql`
+  mutation Mutation($payload: CreateChatInput) {
+    createChat(payload: $payload) {
+      _id
+      userId
+      messages {
+        sender
+        message
+      }
+    }
+  }
+`;
+
 export default function Homepage() {
   const [topPlaces, setTopPlaces] = useState([]);
+  const [chat, setChat] = useState("");
   const { data } = useQuery(GET_GENERAL_RECOMMENDATIONS);
+  const [createChat] = useMutation(CREATE_CHAT, {
+    onCompleted: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
+  const handleCreateMessage = (e) => {
+    e.preventDefaut();
+    createChat;
+  };
   useEffect(() => {
     if (data) {
       setTopPlaces(data.getGeneralRecommendations);
@@ -120,9 +146,8 @@ export default function Homepage() {
       <motion.div
         className="md:mt-24 mt-19 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0"
         initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
       >
         <p className="lg:text-3xl md:text-2xl text-xl font-bold text-slate-700">
           Top Places to Visit
@@ -133,9 +158,8 @@ export default function Homepage() {
               key={item._id}
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[100px]"
               initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
             >
               <TopPlaceCard topPlaces={item} />
             </motion.div>
@@ -147,9 +171,8 @@ export default function Homepage() {
               key={item._id}
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[90px]"
               initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
             >
               <TopPlaceCard topPlaces={item} />
             </motion.div>

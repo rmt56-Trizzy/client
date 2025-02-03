@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { useTypewriter } from "react-simple-typewriter";
+import { IoIosSend } from "react-icons/io";
 
 export default function CardChatBox() {
   const [text] = useTypewriter({
@@ -26,17 +27,21 @@ export default function CardChatBox() {
   };
   return (
     <div className="rounded-xl shadow-lg bg-white w-[305px] h-[100px] md:w-[618px] md:h-[154px] p-2.5">
-      <div className="flex justify-between items-center">
+      <div className="flex gap-3 items-center">
         <img
           src="/img/Velzy.png"
           alt="profile"
           className="md:h-5.5 md:w-5.5 w-5 h-5 object-cover"
         />
+        <p className="me-auto md:text-sm text-xs text-gray-600 truncate">
+          Hi, I am Velzy. How can I assist you today?
+        </p>
         <button
           className="px-2 py-1.5 cursor-pointer bg-teal-500 text-xs md:text-sm rounded-md text-white"
           onClick={handleAskAi}
         >
           Ask Anything
+          <IoIosSend className="md:text-2xl text-xl text-white" />
         </button>
       </div>
       <div className="mt-2">
