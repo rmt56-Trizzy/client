@@ -29,8 +29,8 @@ export const GOOGLE_LOGIN = gql`
 
 export default function Login() {
   const [input, setInput] = useState({
-    email: "test1@mail.com",
-    password: "",
+    email: "jon@mail.com",
+    password: "12345",
   });
   const [isValidInputLogin, setIsValidInputLogin] = useState(false);
   const navigate = useNavigate();
