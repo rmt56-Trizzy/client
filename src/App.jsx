@@ -5,7 +5,7 @@ import Login from "./pages/unAuth/Login";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Register from "./pages/unAuth/Register";
 import MainPageLayout from "./layouts/MainPageLayout";
-import RecommendationDetail from "./pages/auth/RecommendationDetail";
+import RecommendationDetailPage from "./pages/auth/RecommendationDetailPage";
 import { ApolloProvider } from "@apollo/client";
 import client from "./config/apolllo";
 import UnAuthLayout from "./layouts/UnAuthLayout";
@@ -13,9 +13,7 @@ import PaymentPage from "./pages/auth/PaymentPage";
 import AuthLayout from "./layouts/AuthLayout";
 
 import ProfilePage from "./pages/auth/ProfilePage";
-
-import Chatbox from "./pages/auth/Chatbox";
-
+import ChatPage from "./pages/auth/ChatPage";
 
 function App() {
   return (
@@ -30,17 +28,17 @@ function App() {
               </Route>
               <Route element={<AuthLayout />}>
                 <Route element={<MainPageLayout />}>
-                  <Route path="/chat" element={<Chatbox />} />
+                  <Route path="/chat" element={<ChatPage />} />
                   <Route path="/pay" element={<PaymentPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route
+                    path="/recommendation/:id"
+                    element={<RecommendationDetailPage />}
+                  />
                 </Route>
               </Route>
               <Route element={<MainPageLayout />}>
                 <Route path="/" element={<Homepage />} />
-                <Route
-                  path="/recommendation/:id"
-                  element={<RecommendationDetail />}
-                />
               </Route>
             </Routes>
           </BrowserRouter>

@@ -6,8 +6,9 @@ import FitBounds from "../../components/Fitbounds";
 import { ReactSortable } from "react-sortablejs";
 import { TbMapPinPlus } from "react-icons/tb";
 import { TbCalendarPlus } from "react-icons/tb";
+import { motion } from "framer-motion";
 
-export default function RecommendationDetail() {
+export default function RecommendationDetailPage() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [lastZoomed, setLastZoomed] = useState(null);
   const [itinerary, setItinerary] = useState({
@@ -216,7 +217,12 @@ export default function RecommendationDetail() {
     <div className="max-w-[63rem] mx-auto md:pt-8 pt-4 pb-12 px-4">
       <div className="grid grid-cols-1 lg:grid-cols-[550px_1fr] gap-8">
         {/* Kolom Kiri */}
-        <div className="left-column">
+        <motion.div
+          initial={{ opacity: 0, x: -200 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="left-column"
+        >
           {/* Thumbnail */}
           <div className="thumbnail-section relative mb-4">
             <img
@@ -351,10 +357,16 @@ export default function RecommendationDetail() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Kolom Kanan: Map */}
-        <div className="map-section w-full lg:w-[400px] h-[400px] md:h-[500px] lg:h-[650px] sticky top-1">
+        <motion.div
+          initial={{ opacity: 0, x: 200 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          viewport={{ once: true }}
+          className="map-section w-full lg:w-[400px] h-[400px] md:h-[500px] lg:h-[650px] sticky top-1"
+        >
           <MapContainer
             center={[35.6895, 139.6917]}
             zoom={selectedDay ? 16 : 12}
@@ -400,7 +412,7 @@ export default function RecommendationDetail() {
               </Marker>
             ))}
           </MapContainer>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
