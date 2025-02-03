@@ -225,9 +225,9 @@ export default function Homepage() {
         </div>
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, x: -100 }}
+        initial={{ opacity: 0, x: -400 }}
         whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+        transition={{ duration: 1, delay: 0.2 }}
         viewport={{ once: true }}
         className="bg-[#21bcbe] text-white"
       >
@@ -287,7 +287,7 @@ export default function Homepage() {
         <motion.p
           initial={{ opacity: 0, x: 200 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 1, delay: 0.2 }}
           viewport={{ once: true }}
           className="font-bold text-center md:text-4xl lg:text-5xl text-xl "
         >
@@ -300,7 +300,7 @@ export default function Homepage() {
                 <motion.img
                   initial={{ opacity: 0, x: -100 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
+                  transition={{ duration: 1, delay: 0.2 }}
                   viewport={{ once: true }}
                   src={item.img}
                   alt={item.name}
@@ -315,7 +315,7 @@ export default function Homepage() {
                 <motion.img
                   initial={{ opacity: 0, x: 200 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
+                  transition={{ duration: 1, delay: 0.2 }}
                   viewport={{ once: true }}
                   src={item.img}
                   alt={item.name}
