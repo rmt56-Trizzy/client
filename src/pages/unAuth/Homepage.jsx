@@ -200,22 +200,24 @@ export default function Homepage() {
         <div className="md:mt-16 mt-4 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0">
           <div className="lg:py-20 py-10">
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 100 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 1, delay: 0.3 }}
               viewport={{ once: true }}
               className="lg:text-6xl md:text-4xl text-xl md:w-[450px] font-bold lg:w-[700px] text-center w-[250px] mx-auto"
             >
               Cool things people have said about Trizzy
             </motion.p>
             <div className="md:mt-10 lg:mt-18 mt-8">
-              <div className="grid lg:grid-cols-2 grid-cols-1  md:gap-5 gap-2">
+              <motion.div
+                initial={{ opacity: 0, x: 100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="grid lg:grid-cols-2 grid-cols-1  md:gap-5 gap-2"
+              >
                 {userReviews.slice(0, 2).map((review) => (
-                  <motion.div
-                    initial={{ opacity: 0, x: 100 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    viewport={{ once: true }}
+                  <div
                     key={review.id}
                     className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
                   >
@@ -224,17 +226,19 @@ export default function Homepage() {
                       review={review.review}
                       img={review.img}
                     />
-                  </motion.div>
+                  </div>
                 ))}
-              </div>
-              <div className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-2 md:mt-5 mt-2">
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-2 md:mt-5 mt-2"
+              >
                 {userReviews.slice(2, 5).map((review) => (
-                  <motion.div
+                  <div
                     key={review.id}
-                    initial={{ opacity: 0, x: -100 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    viewport={{ once: true }}
                     className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
                   >
                     <ReviewCard
@@ -242,9 +246,9 @@ export default function Homepage() {
                       review={review.review}
                       img={review.img}
                     />
-                  </motion.div>
+                  </div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

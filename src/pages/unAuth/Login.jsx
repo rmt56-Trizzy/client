@@ -5,7 +5,7 @@ import { validate } from "react-email-validator";
 import authAnimation from "../../animations/authAnimation2.json";
 import Lottie from "lottie-react";
 import { gql, useMutation } from "@apollo/client";
-import { toastError } from "../../utils/swallAlert";
+import { toastError, toastSuccess } from "../../utils/swallAlert";
 import loadingAnimation from "../../animations/loading.json";
 import { motion } from "framer-motion";
 
@@ -39,6 +39,7 @@ export default function Login() {
     onCompleted: async (data) => {
       await localStorage.setItem("access_token", data.login.access_token);
       await localStorage.setItem("userId", data.login.userId);
+      toastSuccess("Login successfully");
       navigate("/");
     },
     onError: (error) => {
@@ -50,6 +51,7 @@ export default function Login() {
     onCompleted: async (data) => {
       await localStorage.setItem("access_token", data.googleLogin.access_token);
       await localStorage.setItem("userId", data.googleLogin.userId);
+      toastSuccess("Login successfully");
       navigate("/");
     },
     onError: (error) => {
