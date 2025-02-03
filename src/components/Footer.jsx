@@ -9,11 +9,11 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-gray-900 md:py-10 py-6 border-t border-gray-200">
+    <footer className="bg-white text-gray-900 md:py-10 py-6 border-t border-gray-200 overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 lg:py-10 md:py-6 md:grid-cols-3 gap-8">
           <motion.div
-            initial={{ opacity: 0, x: -350 }}
+            initial={{ opacity: 0, x: -100 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.4 }}
             viewport={{ once: true }}
@@ -60,7 +60,7 @@ export default function Footer() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 400 }}
+            initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.4 }}
             viewport={{ once: true }}
@@ -86,7 +86,7 @@ export default function Footer() {
 
         <div className="mt-10 flex flex-col md:flex-row justify-between text-xl md:text-2xl lg:text-3xl items-center border-t border-gray-300 pt-6">
           <motion.p
-            initial={{ opacity: 0, x: -400 }}
+            initial={{ opacity: 0, x: -100 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
             viewport={{ once: true }}
@@ -95,7 +95,7 @@ export default function Footer() {
             &copy; 2025 Trizzy. All rights reserved.
           </motion.p>
           <motion.div
-            initial={{ opacity: 0, x: 400 }}
+            initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
             viewport={{ once: true }}

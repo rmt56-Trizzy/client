@@ -3,6 +3,8 @@ import TopPlaceCard from "../../components/places/TopPlaceCard";
 import { MdOutlineFlightTakeoff } from "react-icons/md";
 import ReviewCard from "../../components/ReviewCard";
 import { motion } from "framer-motion";
+import { gql, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
 
 const userReviews = [
   {
@@ -66,61 +68,31 @@ const trustedBy = [
   },
 ];
 
-const topPlace = {
-  data: {
-    getGeneralRecommendations: [
-      {
-        _id: "679f8462d914738fbc1e1515",
-        city: "Jakarta",
-        country: "Indonesia",
-        countryCode: "ID",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2024/02/Jakarta-Kota-Tua-Jakarta-old-town-1050x700.jpg",
-        daysCount: 3,
-      },
-      {
-        _id: "679f8462d914738fbc1e1516",
-        city: "Seoul",
-        country: "South Korea",
-        countryCode: "KR",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2024/08/Namsan-Tower-during-autumn-in-Seoul-South-Korea.jpg",
-        daysCount: 4,
-      },
-      {
-        _id: "679f8462d914738fbc1e1517",
-        city: "Tokyo",
-        country: "Japan",
-        countryCode: "JP",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2018/07/Experience-Tokyo_landmarks_Tokyo-Tower.jpg",
-        daysCount: 5,
-      },
-      {
-        _id: "679f8462d914738fbc1e1518",
-        city: "London",
-        country: "United Kingdom",
-        countryCode: "GB",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2020/05/Featured-photo-aerial-of-River-Thames-Things-to-do-in-London-UK.jpg",
-        daysCount: 4,
-      },
-      {
-        _id: "679f8462d914738fbc1e1519",
-        city: "Bangkok",
-        country: "Thailand",
-        countryCode: "TH",
-        cityImage:
-          "https://www.agoda.com/wp-content/uploads/2018/06/experiences_thailand_bangkok_wat-phra-kaew.jpg",
-        daysCount: 3,
-      },
-    ],
-  },
-};
+const GET_GENERAL_RECOMMENDATIONS = gql`
+  query GetGeneralRecommendations {
+    getGeneralRecommendations {
+      _id
+      city
+      country
+      countryCode
+      cityImage
+      daysCount
+    }
+  }
+`;
 
 export default function Homepage() {
+  const [topPlaces, setTopPlaces] = useState([]);
+  const { data } = useQuery(GET_GENERAL_RECOMMENDATIONS);
+
+  useEffect(() => {
+    if (data) {
+      setTopPlaces(data.getGeneralRecommendations);
+    }
+  }, [data]);
+
   return (
-    <div className="max-w-screen">
+    <div className="max-w-screen overflow-hidden md:overflow-visible">
       <div className="relative">
         <motion.img
           src="/img/banner.jpg"
@@ -156,7 +128,7 @@ export default function Homepage() {
           Top Places to Visit
         </p>
         <div className="grid grid-cols-2 md:gap-5 gap-2 mt-5">
-          {topPlace.data.getGeneralRecommendations.slice(0, 2).map((item) => (
+          {topPlaces.slice(0, 2).map((item) => (
             <motion.div
               key={item._id}
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[100px]"
@@ -170,7 +142,7 @@ export default function Homepage() {
           ))}
         </div>
         <div className="grid grid-cols-3 md:gap-5 gap-2 md:mt-5 mt-2">
-          {topPlace.data.getGeneralRecommendations.slice(2, 5).map((item) => (
+          {topPlaces.slice(2, 5).map((item) => (
             <motion.div
               key={item._id}
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[90px]"
@@ -240,7 +212,7 @@ export default function Homepage() {
               <div className="grid lg:grid-cols-2 grid-cols-1  md:gap-5 gap-2">
                 {userReviews.slice(0, 2).map((review) => (
                   <motion.div
-                    initial={{ opacity: 0, x: 200 }}
+                    initial={{ opacity: 0, x: 100 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1, delay: 0.3 }}
                     viewport={{ once: true }}
@@ -279,7 +251,7 @@ export default function Homepage() {
       </motion.div>
       <div className="lg:my-24 md:my-14 my-4 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0 text-slate-700">
         <motion.p
-          initial={{ opacity: 0, x: 200 }}
+          initial={{ opacity: 0, x: 100 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
           viewport={{ once: true }}
@@ -307,7 +279,7 @@ export default function Homepage() {
             {trustedBy.slice(3, 5).map((item) => (
               <div key={item.id} className="flex justify-center items-center">
                 <motion.img
-                  initial={{ opacity: 0, x: 200 }}
+                  initial={{ opacity: 0, x: 100 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1, delay: 0.3 }}
                   viewport={{ once: true }}
