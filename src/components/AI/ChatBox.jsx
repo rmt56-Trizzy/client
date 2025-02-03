@@ -61,7 +61,7 @@ export default function ChatBox() {
       {/* Messages Container */}
       <div
         ref={chatContainerRef}
-        className="bg-white h-[360px] md:h-[500px] overflow-y-scroll pl-4 py-4 md:pl-6 md:pr-2 md:py-6 space-y-4"
+        className="bg-white h-[360px] md:h-[500px] overflow-y-scroll pl-4 py-4 md:pl-6 md:pr-2 space-y-4"
       >
         {chatMessages.map((msg, index) => (
           <div
@@ -71,7 +71,7 @@ export default function ChatBox() {
             } w-full`}
           >
             <div
-              className={`rounded-2xl py-1 px-3 md:py-2 lg:p-4 ${
+              className={`rounded-2xl py-1 px-3 md:py-1.5 ${
                 msg.sender === "User"
                   ? "bg-gradient-to-r from-teal-400 to-teal-500 text-white shadow-lg"
                   : "bg-gray-100 shadow"
