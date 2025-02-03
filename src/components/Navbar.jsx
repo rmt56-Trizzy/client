@@ -33,18 +33,32 @@ export default function Navbar() {
     <div className="md:h-[67px] h-10 border-b-1 border-gray-300 sticky top-0 z-50 bg-white">
       <div className="mx-auto lg:px-12 md:px-10 flex items-center h-full px-4">
         <NavLink to={"/"} className="me-auto">
-          LOGO
+          <img
+            src="/img/Trizzy_icon.png"
+            alt="Trizzy-Logo"
+            className="md:w-15 w-9.5"
+          />
         </NavLink>
-        <button
-          className="md:hidden flex flex-col justify-center items-center gap-1 p-2 cursor-pointer"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? (
-            <MdClose className="text-2xl" />
-          ) : (
-            <GiHamburgerMenu className="text-xl" />
-          )}
-        </button>
+        <div className="md:hidden flex items-center gap-3">
+          <div className="rounded-full flex justify-between items-center gap-2 py-[4px] px-1.5 bg-gray-200">
+            <p className="text-xs font-semibold">ID</p>
+            <img
+              src="/img/Indonesia flag.png"
+              alt="indo-flag"
+              className="w-4 h-4 rounded-full"
+            />
+          </div>
+          <button
+            className="md:hidden flex flex-col w-9 justify-center items-center gap-1 p-2 cursor-pointer"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <MdClose className="text-2xl" />
+            ) : (
+              <GiHamburgerMenu className="text-xl" />
+            )}
+          </button>
+        </div>
 
         <ProfileModal
           isModalOpen={isModalProfileOpen}
@@ -77,8 +91,8 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex gap-4">
-              <div className="rounded-full flex justify-between items-center gap-4 px-3 bg-gray-200">
-                <p className=" font-semibold">IDR</p>
+              <div className="rounded-full flex justify-between items-center gap-3 px-3 bg-gray-200">
+                <p className=" font-semibold">ID</p>
                 <img
                   src="/img/Indonesia flag.png"
                   alt="indo-flag"

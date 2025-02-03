@@ -274,7 +274,7 @@ const ProfilePage = () => {
     }
   };
   return (
-    <div className="min-h-screen bg-gray-100 text-slate-700">
+    <div className="min-h-screen text-slate-700 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0">
       {/* Main Content */}
       <main className="p-6">
         {/* My Trips Section */}
