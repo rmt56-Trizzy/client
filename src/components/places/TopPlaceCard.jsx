@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router";
+import ReactCountryFlag from "react-country-flag";
 
 export default function TopPlaceCard({ topPlaces }) {
   return (
@@ -10,19 +11,19 @@ export default function TopPlaceCard({ topPlaces }) {
       <div className="absolute top-0 rounded-xl left-0 w-full h-full bg-gradient-to-b from-blue-500/45 to-transparent "></div>
 
       <img
-        src="https://cf.bstatic.com/xdata/images/city/600x600/688053.jpg?k=da426cecdc6492da255ca0612c4bb41bd785b2565c83405f7281f15c05b16376&o="
-        alt="jakarta"
+        src={topPlaces?.cityImage}
+        alt={topPlaces?.city}
         className="rounded-xl w-full h-full object-cover"
       />
 
       <div className="absolute md:top-2 md:py-3 md:px-5 top-0 p-2 flex md:gap-2 gap-1 items-center">
         <p className="font-bold text-white md:text-xl lg:text-2xl text-xs">
-          Jakarta
+          {topPlaces?.city}
         </p>
-        <img
-          src="/img/Indonesia flag.png"
-          alt="indonesia-flag"
-          className="w-2.5 h-2 md:w-[24px] md:h-[16px] md:mt-1"
+        <ReactCountryFlag
+          countryCode={topPlaces?.countryCode}
+          svg
+          className="md:mt-1 md:text-xl text-sm"
         />
       </div>
     </NavLink>
