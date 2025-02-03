@@ -3,7 +3,7 @@ import TopPlaceCard from "../../components/places/TopPlaceCard";
 import { MdOutlineFlightTakeoff } from "react-icons/md";
 import ReviewCard from "../../components/ReviewCard";
 import { motion } from "framer-motion";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 
 const userReviews = [
@@ -35,7 +35,7 @@ const userReviews = [
     id: 5,
     name: "Bina",
     review: `"Trizzy took my travel stress away! It’s like having an AI concierge who just gets what I want."`,
-    img: "/img/profile.png",
+    img: "/img/review5.jpg",
   },
 ];
 
@@ -81,36 +81,10 @@ const GET_GENERAL_RECOMMENDATIONS = gql`
   }
 `;
 
-const CREATE_CHAT = gql`
-  mutation Mutation($payload: CreateChatInput) {
-    createChat(payload: $payload) {
-      _id
-      userId
-      messages {
-        sender
-        message
-      }
-    }
-  }
-`;
-
 export default function Homepage() {
   const [topPlaces, setTopPlaces] = useState([]);
-  const [chat, setChat] = useState("");
   const { data } = useQuery(GET_GENERAL_RECOMMENDATIONS);
-  const [createChat] = useMutation(CREATE_CHAT, {
-    onCompleted: (data) => {
-      console.log(data);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
 
-  const handleCreateMessage = (e) => {
-    e.preventDefaut();
-    createChat;
-  };
   useEffect(() => {
     if (data) {
       setTopPlaces(data.getGeneralRecommendations);

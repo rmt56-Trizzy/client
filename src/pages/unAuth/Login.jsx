@@ -36,9 +36,9 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [login, { loading }] = useMutation(LOGIN, {
-    onCompleted: async (data) => {
-      await localStorage.setItem("access_token", data.login.access_token);
-      await localStorage.setItem("userId", data.login.userId);
+    onCompleted: (data) => {
+      localStorage.setItem("access_token", data.login.access_token);
+      localStorage.setItem("userId", data.login.userId);
       toastSuccess("Login successfully");
       navigate("/");
     },
@@ -48,9 +48,9 @@ export default function Login() {
   });
 
   const [googleLogin] = useMutation(GOOGLE_LOGIN, {
-    onCompleted: async (data) => {
-      await localStorage.setItem("access_token", data.googleLogin.access_token);
-      await localStorage.setItem("userId", data.googleLogin.userId);
+    onCompleted: (data) => {
+      localStorage.setItem("access_token", data.googleLogin.access_token);
+      localStorage.setItem("userId", data.googleLogin.userId);
       toastSuccess("Login successfully");
       navigate("/");
     },
