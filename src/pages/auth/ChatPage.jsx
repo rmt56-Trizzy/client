@@ -135,8 +135,7 @@ export default function ChatPage() {
         initial={{ opacity: 0, x: -200 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 0.3 }}
-        className="lg:w-1/3 md:w-[500px] px-4 lg:mx-0 justify-center lg:mt-[55px] flex items-center md:mx-auto"
-      >
+        className="lg:w-1/3 md:w-[500px] px-4 lg:mx-0 justify-center lg:mt-[55px] flex items-center md:mx-auto">
         <ChatBox generateRecommendation={generateRecommendation} />
       </motion.div>
 
@@ -144,8 +143,7 @@ export default function ChatPage() {
         initial={{ opacity: 0, x: 200 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 0.3 }}
-        className="lg:w-2/3 mx-auto px-4 w-[350px] md:w-[700px] justify-center lg:flex-col"
-      >
+        className="lg:w-2/3 mx-auto px-4 w-[350px] md:w-[700px] justify-center lg:flex-col">
         {isRecommendationGenerated ? (
           <div className="my-4 font-bold md:my-1">
             <h2 className="md:text-3xl text-xl text-center text-slate-700">
@@ -159,13 +157,11 @@ export default function ChatPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                   key={place._id}
-                  className="cursor-pointer h-[140px] md:h-[180px] lg:h-[270px] md:p-1"
-                >
+                  className="cursor-pointer h-[140px] md:h-[180px] lg:h-[270px] md:p-1">
                   <span
                     onClick={() =>
                       handleGenerateRecommendationDetail(place._id)
-                    }
-                  >
+                    }>
                     <TopPlaceCard topPlaces={place} />
                   </span>
                 </motion.div>

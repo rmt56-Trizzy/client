@@ -233,8 +233,7 @@ const ProfilePage = () => {
               <div
                 key={trip._id}
                 style={{ animationDelay: `${index * 50}ms` }}
-                className="animate-[slideUp_0.1s_ease-out_forwards] opacity-0"
-              >
+                className="animate-[slideUp_0.1s_ease-out_forwards] opacity-0">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 md:p-6 rounded-xl border border-gray-100 bg-white/95 backdrop-blur-sm hover:border-indigo-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group space-y-4 md:space-y-0">
                   <div className="flex items-center gap-3 md:gap-5 w-full md:w-1/3">
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-teal-50 to-indigo-50 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-300">
@@ -258,8 +257,7 @@ const ProfilePage = () => {
 
                   <button
                     onClick={() => handleSeeDetails(trip._id)}
-                    className="w-full md:w-auto px-4 md:px-6 py-2 md:py-2.5 cursor-pointer rounded-xl bg-[#21bcbe] hover:bg-teal-600 text-white font-medium"
-                  >
+                    className="w-full md:w-auto px-4 md:px-6 py-2 md:py-2.5 cursor-pointer rounded-xl bg-[#21bcbe] hover:bg-teal-600 text-white font-medium">
                     See Details
                   </button>
                 </div>
@@ -310,14 +308,12 @@ const ProfilePage = () => {
                     className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 cursor-pointer text-white font-medium
                              hover:from-indigo-600 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 
                              disabled:cursor-not-allowed transition-all duration-300 shadow-md hover:shadow-lg
-                             active:scale-95 disabled:scale-100 hover:-translate-y-0.5"
-                  >
+                             active:scale-95 disabled:scale-100 hover:-translate-y-0.5">
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
                         <svg
                           className="animate-spin h-4 w-4 md:h-5 md:w-5"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <circle
                             className="opacity-25"
                             cx="12"
