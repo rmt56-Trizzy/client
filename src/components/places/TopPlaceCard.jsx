@@ -1,13 +1,9 @@
 import PropTypes from "prop-types";
-import { NavLink } from "react-router";
 import ReactCountryFlag from "react-country-flag";
 
 export default function TopPlaceCard({ topPlaces }) {
   return (
-    <NavLink
-      to={`/general-recommendation/${topPlaces?._id}`}
-      className="relative h-full cursor-pointer"
-    >
+    <div className="relative w-full h-full">
       <div className="absolute top-0 rounded-xl left-0 w-full h-full bg-gradient-to-b from-blue-500/45 to-transparent "></div>
 
       <img
@@ -26,7 +22,7 @@ export default function TopPlaceCard({ topPlaces }) {
           className="md:mt-1 md:text-xl text-sm"
         />
       </div>
-    </NavLink>
+    </div>
   );
 }
 

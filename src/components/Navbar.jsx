@@ -45,6 +45,10 @@ export default function Navbar() {
     navigate("/login");
   };
 
+  const handleNavigateProfile = () => {
+    navigate("/profile");
+  };
+
   useEffect(() => {
     if (data) {
       setUserData(data.getUserById);
@@ -88,8 +92,7 @@ export default function Navbar() {
           transition={{
             duration: 1.5,
           }}
-          className="md:hidden flex items-center gap-3"
-        >
+          className="md:hidden flex items-center gap-3">
           <div className="rounded-full flex justify-between items-center gap-2 py-[4px] px-1.5 bg-gray-200">
             <p className="text-xs font-semibold">ID</p>
             <img
@@ -101,8 +104,7 @@ export default function Navbar() {
           <div>
             <button
               className="md:hidden flex flex-col max-w-screen w-7 justify-center items-center gap-1 p-2 cursor-pointer"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               {isMobileMenuOpen ? (
                 <MdClose className="text-2xl" />
               ) : (
@@ -115,6 +117,7 @@ export default function Navbar() {
         <ProfileModal
           isModalOpen={isModalProfileOpen}
           handelLogout={handelLogout}
+          handleNavigateProfile={handleNavigateProfile}
         />
         <motion.div
           initial={{
@@ -130,8 +133,7 @@ export default function Navbar() {
           transition={{
             duration: 1.5,
           }}
-          className="hidden md:block"
-        >
+          className="hidden md:block">
           {isLogin ? (
             <div className="flex gap-4">
               <div className="rounded-full flex justify-between items-center gap-3 px-3 bg-gray-200">
@@ -144,8 +146,7 @@ export default function Navbar() {
               </div>
               <button
                 className="cursor-pointer"
-                onClick={() => setIsModalProfileOpen(!isModalProfileOpen)}
-              >
+                onClick={() => setIsModalProfileOpen(!isModalProfileOpen)}>
                 <div className="flex items-center gap-2">
                   <img
                     src="/img/profile.png"
@@ -186,8 +187,7 @@ export default function Navbar() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
               transition={{ duration: 1, ease: "easeInOut" }}
-              className="fixed top-10 right-0 h-full w-2/3 bg-white p-10 shadow-lg md:hidden"
-            >
+              className="fixed top-10 right-0 h-full w-2/3 bg-white p-10 shadow-lg md:hidden">
               {isLogin ? (
                 <div className="text-center">
                   <div className="flex flex-col items-center justify-center gap-2 mx-auto">
@@ -199,20 +199,19 @@ export default function Navbar() {
                     <p className="text-sm">Profile Name</p>
                   </div>
                   <div className="mt-6 font-semibold">
-                    <NavLink>
+                    <NavLink to={"/profile"}>
                       <p className="border-b-1 text-sm border-gray-300 w-full py-3">
                         My Trips
                       </p>
                     </NavLink>
-                    <NavLink>
+                    <NavLink to={"/profile"}>
                       <p className="py-3 text-sm border-b-1 border-gray-300 w-full">
                         Subscription
                       </p>
                     </NavLink>
                     <button
                       className="rounded-md border text-sm md:text-base mt-4 transition-all duration-300 border-red-600 py-1 md:py-1 px-3 font-semibold hover:bg-red-50 text-red-600"
-                      onClick={handelLogout}
-                    >
+                      onClick={handelLogout}>
                       Logout
                     </button>
                   </div>

@@ -1,28 +1,99 @@
 import { useRef, useState, useEffect } from "react";
 import { IoIosSend } from "react-icons/io";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { useParams } from "react-router";
+import PropTypes from "prop-types";
 
-export default function ChatBox() {
-  const [chatMessages, setChatMessages] = useState([
-    {
-      sender: "Bot",
-      message: "Hi, I am Velzy. How can I assist you today?",
-    },
-    {
-      sender: "User",
-      message: "I want to travel to West Europe",
-    },
-    {
-      sender: "Bot",
-      message: "How many days are planning for your trip?",
-    },
-    {
-      sender: "User",
-      message: "5 days is enough",
-    },
-  ]);
+const GET_CHAT_BY_ID = gql`
+  query GetChatById($id: ID!) {
+    getChatById(_id: $id) {
+      _id
+      userId
+      messages {
+        sender
+        message
+      }
+    }
+  }
+`;
 
+const SAVE_CHAT_FROM_USER = gql`
+  mutation SaveReplyFromUser($payload: SaveChatInput) {
+    saveReplyFromUser(payload: $payload) {
+      _id
+      userId
+      messages {
+        sender
+        message
+      }
+    }
+  }
+`;
+
+const GET_REPLY_FROM_BOT = gql`
+  mutation GetReplyFromBot($chatId: ID!) {
+    getReplyFromBot(chatId: $chatId) {
+      _id
+      userId
+      messages {
+        sender
+        message
+      }
+    }
+  }
+`;
+
+const GET_RECOMMENDATION = gql`
+  query GetRecommendations($chatId: ID!) {
+    getRecommendations(chatId: $chatId) {
+      _id
+    }
+  }
+`;
+
+export default function ChatBox({ generateRecommendation }) {
+  const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [showGenerateButton, setShowGenerateButton] = useState(false);
+  const [endChat, setEndChat] = useState(false);
   const chatContainerRef = useRef(null);
+
+  const params = useParams();
+  const { id } = params;
+  console.log("🚀 ~ params:", id);
+
+  const { data, loading, error } = useQuery(GET_CHAT_BY_ID, {
+    variables: {
+      id: id,
+    },
+  });
+
+  const { data: recommendations } = useQuery(GET_RECOMMENDATION, {
+    variables: {
+      chatId: id,
+    },
+    onCompleted: (data) => {
+      if (data?.getRecommendations?.length > 0) {
+        setEndChat(true);
+      }
+    },
+  });
+
+  const [saveReplyFromUser] = useMutation(SAVE_CHAT_FROM_USER);
+  const [getReplyFromBot] = useMutation(GET_REPLY_FROM_BOT, {
+    onCompleted: (data) => {
+      setChatMessages(data.getReplyFromBot.messages);
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      setChatMessages(data.getChatById.messages);
+      if (data.getChatById.messages.length > 4) {
+        setShowGenerateButton(true);
+      }
+    }
+  }, [data]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -31,13 +102,26 @@ export default function ChatBox() {
     }
   }, [chatMessages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (newMessage.trim()) {
       setChatMessages((prevMessages) => [
         ...prevMessages,
         { sender: "User", message: newMessage.trim() },
       ]);
       setNewMessage("");
+      await saveReplyFromUser({
+        variables: {
+          payload: {
+            chatId: id,
+            userMessage: newMessage.trim(),
+          },
+        },
+      });
+      await getReplyFromBot({
+        variables: {
+          chatId: id,
+        },
+      });
     }
   };
 
@@ -46,6 +130,11 @@ export default function ChatBox() {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleGenerateResponse = () => {
+    generateRecommendation();
+    setEndChat(true);
   };
 
   return (
@@ -61,27 +150,23 @@ export default function ChatBox() {
       {/* Messages Container */}
       <div
         ref={chatContainerRef}
-        className="bg-white h-[360px] md:h-[500px] overflow-y-scroll pl-4 py-4 md:pl-6 md:pr-2 space-y-4"
-      >
+        className="bg-white h-[360px] md:h-[500px] overflow-y-scroll pl-4 py-4 md:pl-6 md:pr-2 space-y-4">
         {chatMessages.map((msg, index) => (
           <div
             key={index}
             className={`flex ${
               msg.sender === "User" ? "justify-end" : "justify-start"
-            } w-full`}
-          >
+            } w-full`}>
             <div
               className={`rounded-2xl py-1 px-3 md:py-1.5 ${
                 msg.sender === "User"
                   ? "bg-gradient-to-r from-teal-400 to-teal-500 text-white shadow-lg"
                   : "bg-gray-100 shadow"
-              } w-fit max-w-[300px] transform transition-all duration-200 hover:scale-102 text-xs md:text-base`}
-            >
+              } w-fit max-w-[300px] transform transition-all duration-200 hover:scale-102 text-xs md:text-base`}>
               <p
                 className={`${
                   msg.sender === "User" ? "text-right" : "text-left"
-                } leading-relaxed`}
-              >
+                } leading-relaxed`}>
                 {msg.message}
               </p>
             </div>
@@ -95,17 +180,49 @@ export default function ChatBox() {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyPress}
-          placeholder="Type your message..."
-          className="w-full p-2 md:p-3 border md:text-sm text-xs rounded-full border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent resize-none px-4 shadow-sm"
+          placeholder={endChat ? "Chat has ended" : "Type your message..."}
+          disabled={endChat}
+          className={`w-full p-2 md:p-3 border md:text-sm text-xs rounded-full border-gray-200 ${
+            !endChat
+              ? "focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+              : "bg-gray-100"
+          } resize-none px-4 shadow-sm`}
           rows="1"
         />
-        <button
-          onClick={handleSendMessage}
-          className="rounded-full bg-gradient-to-r felx justify-center items-center from-teal-400 to-teal-500 md:p-3 p-1.5 ml-2 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
-        >
-          <IoIosSend className="md:text-2xl text-xl text-white" />
-        </button>
+        {endChat ? (
+          <button
+            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}>
+            <IoIosSend className="md:text-2xl text-xl text-white" />
+          </button>
+        ) : (
+          <button
+            onClick={handleSendMessage}
+            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-105 cursor-pointer`}>
+            <IoIosSend className="md:text-2xl text-xl text-white" />
+          </button>
+        )}
       </div>
+      {showGenerateButton && (
+        <div className="p-4 bg-white rounded-b-xl flex items-center w-full">
+          {endChat ? (
+            <button
+              className={`w-full rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}>
+              Generating Your Recommendations...
+            </button>
+          ) : (
+            <button
+              onClick={handleGenerateResponse}
+              className={`w-full rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-102 cursor-pointer
+              `}>
+              End Chat and Generate Recommendations
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
+
+ChatBox.propTypes = {
+  generateRecommendation: PropTypes.func.isRequired,
+};

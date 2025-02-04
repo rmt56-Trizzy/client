@@ -61,7 +61,9 @@ const ProfilePage = () => {
     data: Trips,
     loading: loadingTrips,
     error: errorTrips,
-  } = useQuery(GET_MY_TRIPS);
+  } = useQuery(GET_MY_TRIPS, {
+    fetchPolicy: "network-only",
+  });
 
   useEffect(() => {
     if (Trips?.getMyTrips) {
