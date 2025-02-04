@@ -31,13 +31,13 @@ function App() {
                   <Route path="/chat" element={<ChatPage />} />
                   <Route path="/pay" element={<PaymentPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
-                  <Route
-                    path="/recommendation/:id"
-                    element={<RecommendationDetailPage />}
-                  />
                 </Route>
               </Route>
               <Route element={<MainPageLayout />}>
+                <Route
+                  path="/recommendation/:id"
+                  element={<RecommendationDetailPage />}
+                />
                 <Route path="/" element={<Homepage />} />
                 <Route
                   path="/generalrecommendation/:id"

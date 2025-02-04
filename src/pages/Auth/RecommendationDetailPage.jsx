@@ -8,7 +8,7 @@ import { TbMapPinPlus } from "react-icons/tb";
 import { TbCalendarPlus } from "react-icons/tb";
 import { motion } from "framer-motion";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import {
   convertArrayToObject,
   convertObjectToArray,
@@ -19,6 +19,7 @@ import { VscSaveAs } from "react-icons/vsc";
 import { MdDeleteForever, MdOutlineEditCalendar } from "react-icons/md";
 import { CiShare2 } from "react-icons/ci";
 import { GrDrag } from "react-icons/gr";
+import ShareModal from "../../components/ShareModal";
 
 export const GET_RECOMMEND_DETAIL = gql`
   query GetRecommendationDetails($id: ID!) {
@@ -99,8 +100,15 @@ export default function RecommendationDetailPage() {
   const [cardRefs, setCardRefs] = useState([]);
   const [isAddToTrip, setIsAddToTrip] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isModalShareOpen, setIsModalShareOpen] = useState(false);
+  const [accessUID, setAccesUID] = useState("");
+  const [isCanAddTrip, setIsCanAddTrip] = useState(false);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const viewAccess = searchParams.get("view-access");
+
+  const token = localStorage.getItem("access_token");
   const params = useParams();
   const { id } = params;
   const { data, loading } = useQuery(GET_RECOMMEND_DETAIL, {
@@ -113,11 +121,29 @@ export default function RecommendationDetailPage() {
     },
   });
 
+  if (!token && !viewAccess) {
+    toastError("You have no access");
+    navigate("/");
+  }
+
+  const [generateViewAccess, { loading: loadingViewAccess }] = useMutation(
+    GENERATE_VIEW_ACCESS,
+    {
+      onCompleted: (data) => {
+        setAccesUID(data.generateViewAccess);
+      },
+      onError: (error) => {
+        toastError(error);
+      },
+    }
+  );
+
   const [addToMyTrip, { loading: loadingAddToTrip }] = useMutation(
     ADD_RECOMMEND_TO_MY_TRIP,
     {
       onCompleted: () => {
-        toastError("Successfully added to my trip");
+        toastSuccess("Successfully added to my trip");
+        setIsAddToTrip(true);
       },
       onError: (error) => {
         toastError(error);
@@ -148,9 +174,20 @@ export default function RecommendationDetailPage() {
       setTempItinerary(itinerary);
       setCity(data.getRecommendationDetails);
       setDays(Object.keys(itinerary));
-      if (data?.getRecommendationDetails.userId) {
+      if (
+        data?.getRecommendationDetails.userId !==
+          localStorage.getItem("userId") &&
+        !viewAccess
+      ) {
+        toastError("You have no access");
+        navigate("/");
+      }
+      if (
+        data?.getRecommendationDetails.userId === localStorage.getItem("userId")
+      ) {
         setIsAddToTrip(true);
       }
+      setIsCanAddTrip(true);
     }
   }, [data]);
 
@@ -168,7 +205,6 @@ export default function RecommendationDetailPage() {
           recommendationId: id,
         },
       });
-      setIsAddToTrip(true);
     } catch (error) {
       toastError(error);
     }
@@ -221,6 +257,15 @@ export default function RecommendationDetailPage() {
         }
       }, 350);
     }
+  };
+
+  const handleShare = () => {
+    generateViewAccess({
+      variables: {
+        recommendationId: id,
+      },
+    });
+    setIsModalShareOpen(true);
   };
 
   const handleCancelEdit = () => {
@@ -342,10 +387,19 @@ export default function RecommendationDetailPage() {
               <>
                 {isAddToTrip ? (
                   <div className="flex items-center gap-2">
-                    <button className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                    <button
+                      onClick={handleShare}
+                      className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                    >
                       <CiShare2 className="text-sm md:text-base lg:text-lg" />
                       Share Trip
                     </button>
+                    <ShareModal
+                      isOpen={isModalShareOpen}
+                      onClose={() => setIsModalShareOpen(false)}
+                      viewUID={accessUID}
+                      recommendationId={id}
+                    />
                     <button
                       onClick={() => setIsEdit(true)}
                       className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
@@ -356,18 +410,22 @@ export default function RecommendationDetailPage() {
                   </div>
                 ) : (
                   <>
-                    {loadingAddToTrip ? (
-                      <button className="lg:w-[170.89px] lg:h-[40px] md:w-[154.78px] md:h-[36px] w-[134.67px] h-[32px] justify-center rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
-                        <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={handleAddToTrip}
-                        className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
-                      >
-                        <TbMapPinPlus className="text-sm md:text-base lg:text-lg -mt-1" />
-                        Add to My Trip
-                      </button>
+                    {isCanAddTrip && (
+                      <>
+                        {loadingAddToTrip ? (
+                          <button className="lg:w-[170.89px] lg:h-[40px] md:w-[154.78px] md:h-[36px] w-[134.67px] h-[32px] justify-center rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                            <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handleAddToTrip}
+                            className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                          >
+                            <TbMapPinPlus className="text-sm md:text-base lg:text-lg -mt-1" />
+                            Add to My Trip
+                          </button>
+                        )}
+                      </>
                     )}
                   </>
                 )}
