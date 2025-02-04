@@ -13,8 +13,6 @@ const Toast = Swal.mixin({
 });
 
 export const toastError = (error) => {
-  console.log(error, "ini sebeenernya apa ?");
-
   let errorMessage = "Something went wrong";
 
   if (error.graphQLErrors && error.graphQLErrors.length > 0) {

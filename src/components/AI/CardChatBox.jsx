@@ -54,9 +54,10 @@ export default function CardChatBox() {
 
   const textSuggestion = [
     "Inspire me where to go",
+    "Honeymoon ideas?",
     "Create a new Trip",
-    "Honeymoon",
-    "Summer Trip",
+    "Beach vibes!",
+    "Summer escape!",
   ];
 
   return (
@@ -78,7 +79,8 @@ export default function CardChatBox() {
         ) : (
           <button
             className="md:px-2 md:py-1.5 p-1 cursor-pointer bg-teal-500 text-xs md:text-sm rounded-md text-white"
-            onClick={handleCreateMessage}>
+            onClick={handleCreateMessage}
+          >
             <span className="md:block hidden">Ask Anything</span>
             <IoIosSend className="text-xl text-white md:hidden" />
           </button>
@@ -89,14 +91,16 @@ export default function CardChatBox() {
           placeholder={text}
           value={chat}
           onChange={(e) => setChat(e.target.value)}
-          className="w-full outline-none focus:outline-none md:border-b text-xs md:text-sm lg:text-base font-semibold border-gray-200 h-14 md:h-15 resize-none"
+          className="w-full outline-none focus:outline-none md:border-b text-xs md:text-sm lg:text-base border-gray-200 h-14 md:h-15 resize-none"
         />
       </div>
-      <div className="hidden md:flex items-center h-8 text-sm justify-between">
+      <div className="hidden md:flex items-center h-8 text-xs justify-between">
         {textSuggestion.map((suggestion, index) => (
           <p
             key={index}
-            className="rounded-md bg-gray-100 text-gray-400 px-1 py-0.5">
+            className="rounded-md bg-gray-100 text-gray-400 px-1.5 py-1 cursor-pointer hover:bg-white hover:shadow-md  transition-all duration-200"
+            onClick={() => setChat(suggestion)}
+          >
             {suggestion}
           </p>
         ))}

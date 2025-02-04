@@ -21,6 +21,7 @@ export default function ShareModal({
   const [email, setEmail] = useState("");
   const [isCopied, setIsCopied] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(false);
+  const link = `${window.location.origin}/recommendation/${recommendationId}?view-access=${viewUID}`;
 
   const [shareItinerary] = useMutation(SHARE_WITH_EMAIL, {
     onCompleted: (data) => {
@@ -30,7 +31,7 @@ export default function ShareModal({
   });
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(viewUID);
+    navigator.clipboard.writeText(link);
     setIsCopied(true);
 
     setTimeout(() => {
@@ -73,7 +74,7 @@ export default function ShareModal({
       >
         {/* Header */}
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Share This View ID</h2>
+          <h2 className="text-lg font-semibold">Share This Link</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -86,7 +87,7 @@ export default function ShareModal({
         <div className="flex items-center border rounded-lg px-3 py-2 mt-4">
           <input
             className="border-none outline-none flex-1 bg-transparent"
-            value={viewUID}
+            value={link}
             readOnly
           />
           {isCopied ? (

@@ -22,8 +22,8 @@ export default function Footer() {
               Trizzy
             </h2>
             <p className="mt-3 text-gray-600 text-sm md:text-base">
-              Your ultimate AI-powered travel planner. Discover the best hotels
-              and itineraries effortlessly.
+              Your ultimate AI-powered travel planner. Discover the best
+              itineraries effortlessly.
             </p>
           </motion.div>
 
