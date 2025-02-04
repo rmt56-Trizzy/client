@@ -24,14 +24,14 @@ export default function CardChatBox() {
   const navigate = useNavigate();
 
   const [createChat, { loading }] = useMutation(CREATE_CHAT, {
-    onCompleted: () => {
-      navigate("/chat");
+    onCompleted: (data) => {
+      console.log(data);
+      navigate(`/chat/${data.createChat._id}`);
     },
     onError: (error) => {
       toastError(error);
     },
   });
-
   const handleCreateMessage = (e) => {
     e.preventDefault();
     createChat({
@@ -55,7 +55,7 @@ export default function CardChatBox() {
   const textSuggestion = [
     "Inspire me where to go",
     "Create a new Trip",
-    "Find family hotels in Dubai",
+    "Honeymoon",
     "Summer Trip",
   ];
 
@@ -78,8 +78,7 @@ export default function CardChatBox() {
         ) : (
           <button
             className="md:px-2 md:py-1.5 p-1 cursor-pointer bg-teal-500 text-xs md:text-sm rounded-md text-white"
-            onClick={handleCreateMessage}
-          >
+            onClick={handleCreateMessage}>
             <span className="md:block hidden">Ask Anything</span>
             <IoIosSend className="text-xl text-white md:hidden" />
           </button>
@@ -97,8 +96,7 @@ export default function CardChatBox() {
         {textSuggestion.map((suggestion, index) => (
           <p
             key={index}
-            className="rounded-md bg-gray-100 text-gray-400 px-1 py-0.5"
-          >
+            className="rounded-md bg-gray-100 text-gray-400 px-1 py-0.5">
             {suggestion}
           </p>
         ))}
