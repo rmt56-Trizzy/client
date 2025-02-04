@@ -1,13 +1,19 @@
-import "leaflet/dist/leaflet.css";
-import { useRef, useState } from "react";
-import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import FitBounds from "../../components/Fitbounds";
-import { ReactSortable } from "react-sortablejs";
-import { TbMapPinPlus } from "react-icons/tb";
-import { TbCalendarPlus } from "react-icons/tb";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { motion } from "framer-motion";
-import { gql } from "@apollo/client";
+import "leaflet/dist/leaflet.css";
+import React, { useEffect, useRef, useState } from "react";
+import { CiShare2 } from "react-icons/ci";
+import { MdOutlineEditCalendar } from "react-icons/md";
+import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
+import { TbCalendarPlus, TbMapPinPlus } from "react-icons/tb";
+import { VscSaveAs } from "react-icons/vsc";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useNavigate, useParams } from "react-router";
+import { ReactSortable } from "react-sortablejs";
+import FitBounds from "../../components/Fitbounds";
+import LoadingPage from "../../components/LoadingPage";
+import { convertArrayToObject } from "../../utils/convertObjItinery";
+import { toastError } from "../../utils/swallAlert";
 
 export const GET_GEN_RECOMMEND_DETAIL = gql`
 query GetGeneralRecommendationDetails($id: ID!) {
@@ -38,118 +44,88 @@ mutation AddGeneralRecommendationToMyTrip($generalRecommendationId: ID!) {
 }
 `
 
-export const GENERATE_VIEW_ACCESS = gql`
-mutation GenerateViewAccess($recommendationId: ID!) {
-  generateViewAccess(recommendationId: $recommendationId)
-}
-`
-
-
-export const CHECK_VIEW_ACCESS = gql`
-query CheckViewAccess($payload: CheckViewAccessInput) {
-  checkViewAccess(payload: $payload) {
-    _id
-    city
-    country
-    countryCode
-    cityImage
-    daysCount
-    itineraries {
-      day
-      locations {
-        slug
-        name
-        image
-        category
-        coordinates
-      }
-    }
-    userId
-    viewAccess
-  }
-}
-`
-
-export const EDIT_ITINERARY = gql`
-mutation EditItinerary($payload: EditInput) {
-  editItinerary(payload: $payload)
-}
-`
-
-
 export default function GeneralRecommendationDetailPage() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [lastZoomed, setLastZoomed] = useState(null);
-  const [itinerary, setItinerary] = useState({
-    day1: [
-      {
-        slug: "sensoji",
-        name: "Senso-ji Temple",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStuk4v4XbgfT9f6EwaGeLueL779qdpDTRHPg&s",
-        coordinate: [35.7148, 139.7967],
-        category: "Religious Sites",
-      },
-      {
-        slug: "tokyo",
-        name: "Tokyo Skytree",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6G9PAqpDkzEo_sMoEZgS69zIw-UkJO1gtdw&s",
-        coordinate: [35.71, 139.8107],
-        category: "Architectural Buildings",
-      },
-    ],
-    day2: [
-      {
-        slug: "meiji",
-        name: "Meiji Shrine",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLmgW1cw86-pbW2JgFQmE7HuJIH3PyroFEiw&s",
-        coordinate: [35.6764, 139.6993],
-        category: "Religious Sites",
-      },
-      {
-        slug: "shibuya",
-        name: "Shibuya Crossing",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYFc_BBbqG1n6_1GyrLuiYDqPFk8dwqHCI-A&s",
-        coordinate: [35.6595, 139.7005],
-        category: "Points of Interest & Landmarks",
-      },
-    ],
-    day3: [
-      {
-        slug: "imperial",
-        name: "Imperial Palace",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjBt6IIAICwKD5jCeAeTd1XXIIaHou0wq4zg&s",
-        coordinate: [35.6852, 139.7528],
-        category: "Architectural Buildings",
-      },
-      {
-        slug: "ginza",
-        name: "Ginza",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfS5dQAgS4Gdd-r0vuTLKiDW2Pyf0At8GGEw&s",
-        coordinate: [35.6717, 139.7636],
-        category: "Points of Interest & Landmarks",
-      },
-    ],
+  const [itinerary, setItinerary] = useState({});
+  const [city, setCity] = useState({});
+  const [days, setDays] = useState([]);
+  const [collapse, setCollapse] = useState([]);
+  const [cardRefs, setCardRefs] = useState([]);
+  const [isAddToTrip, setIsAddToTrip] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const navigate = useNavigate();
+
+  const params = useParams();
+  const { id } = params;
+  const { data, loading, error } = useQuery(GET_GEN_RECOMMEND_DETAIL, {
+    variables: {
+      id: id,
+    },
   });
 
-  const mapRef = useRef(null);
+  console.log(data,"ini apa");
 
-  const days = Object.keys(itinerary);
-
-  const [collapse, setCollapse] = useState(
-    Array.from({ length: days.length }, () => true)
+  const [addToMyTrip, { loading: loadingAddToTrip }] = useMutation(
+    ADD_GEN_REC_TO_MY_TRIP
   );
+
+  if (loading) <LoadingPage />;
+
+  useEffect(() => {
+    if (error) {
+      toastError(error);
+      navigate("/");
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (data) {
+      const itinerary = convertArrayToObject(
+        data.getGeneralRecommendationDetails.itineraries
+      );
+      setItinerary(itinerary);
+      setCity(data.getGeneralRecommendationDetails);
+      setDays(Object.keys(itinerary));
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (days) {
+      setCollapse(Array.from({ length: days.length }, () => true));
+      setCardRefs(Array.from({ length: days.length }, () => React.createRef()));
+    }
+  }, [days]);
+
+  const handleAddToTrip = async () => {
+    const accessToken = localStorage.getItem('access_token');
+    if (!accessToken) {
+      toastError('You must be logged in to add this recommendation to your trip.');
+      return;
+    }
+
+    try {
+      const { data } = await addToMyTrip({
+        variables: {
+          generalRecommendationId: id, 
+        },
+      });
+
+      const recommendationId = data.addGeneralRecommendationToMyTrip;
+
+      navigate(`/recommendation/${recommendationId}`);
+      
+      setIsAddToTrip(true);
+    } catch (error) {
+      toastError(error);
+    }
+  };
+
+  const mapRef = useRef(null);
 
   const toggleCollapse = (index) => {
     setCollapse((prev) => prev.map((val, i) => (i === index ? !val : val)));
   };
-
-  const cardRefs = days.map(() => useRef(null));
 
   const handleSelectDay = (index) => {
     const selectedItinerary = itinerary[days[index]];
@@ -194,8 +170,6 @@ export default function GeneralRecommendationDetailPage() {
     }
   };
 
-  const city = "Tokyo";
-
   const zoomToLocation = (coordinates) => {
     if (
       lastZoomed &&
@@ -210,27 +184,28 @@ export default function GeneralRecommendationDetailPage() {
     }
   };
 
+
   return (
-    <div className="max-w-[63rem] mx-auto md:pt-8 pt-4 pb-12 px-4">
+    <div className="max-w-[63rem] mx-auto md:pt-8 pt-4 pb-12 px-4 overflow-hidden md:overflow-visible">
       <div className="grid grid-cols-1 lg:grid-cols-[550px_1fr] gap-8">
         {/* Kolom Kiri */}
         <motion.div
-          initial={{ opacity: 0, x: -200 }}
+          initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
+          transition={{ duration: 1, delay: 0.4 }}
           className="left-column"
         >
           {/* Thumbnail */}
           <div className="thumbnail-section relative mb-4">
             <img
-              src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/27/84/4b/d7/caption.jpg?w=1200&h=-1&s=1&cx=994&cy=946&chk=v1_6a1bd939ce726b103997"
-              alt="City Thumbnail"
+              src={city?.cityImage}
+              alt={city?.city}
               className="w-full rounded-lg"
             />
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-60 rounded-b-lg"></div>
             <div className="absolute bottom-[43px] left-4 bg-opacity-60 px-2 py-1 rounded">
-              <h2 className="text-white text-2xl md:text-5xl font-medium">
-                Tokyo for 3 days
+              <h2 className="text-white text-2xl md:text-4xl font-medium truncate">
+                {city?.city} for {city?.daysCount} days
               </h2>
             </div>
           </div>
@@ -245,24 +220,63 @@ export default function GeneralRecommendationDetailPage() {
             <button
               onClick={() =>
                 window.open(
-                  `https://www.booking.com/searchresults.id.html?ss=${city}&ssne=${city}&ssne_untouched=${city}&dest_type=city`,
+                  `https://www.booking.com/searchresults.id.html?ss=${city?.city}&ssne=${city?.city}&ssne_untouched=${city?.city}&dest_type=city`,
                   "_blank"
                 )
               }
               className="cursor-pointer bg-[#21bcbe] hover:bg-teal-600 text-white text-base py-2 px-4 rounded-lg transition w-full md:w-auto flex items-center justify-center gap-2"
             >
               <TbCalendarPlus />
-              Book Hotel in {city}
+              Book Hotel in {city?.city}
             </button>
           </div>
 
           {/* Itinerary Header */}
           <div className="flex justify-between items-center mb-2 border-b md:border-b-2 border-gray-300 pb-4">
             <h3 className="text-xl md:text-2xl font-semibold">Itinerary</h3>
-            <button className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
-              <TbMapPinPlus className="text-sm md:text-base lg:text-lg -mt-1" />
-              Add to My Trip
-            </button>
+            {isEdit ? (
+              <button
+                onClick={() => setIsEdit(false)}
+                className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+              >
+                <VscSaveAs className="text-sm md:text-base lg:text-lg" />
+                Save
+              </button>
+            ) : (
+              <>
+                {isAddToTrip ? (
+                  <div className="flex items-center gap-2">
+                    <button className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                      <CiShare2 className="text-sm md:text-base lg:text-lg" />
+                      Share Trip
+                    </button>
+                    <button
+                      onClick={() => setIsEdit(true)}
+                      className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                    >
+                      <MdOutlineEditCalendar className="text-sm md:text-base lg:text-lg" />
+                      Edit Trip
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {loadingAddToTrip ? (
+                      <button className="lg:w-[170.89px] lg:h-[40px] md:w-[154.78px] md:h-[36px] w-[134.67px] h-[32px] justify-center rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                        <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleAddToTrip}
+                        className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                      >
+                        <TbMapPinPlus className="text-sm md:text-base lg:text-lg -mt-1" />
+                        Add to My Trip
+                      </button>
+                    )}
+                  </>
+                )}
+              </>
+            )}
           </div>
 
           {/* Tombol Day */}
@@ -313,42 +327,71 @@ export default function GeneralRecommendationDetailPage() {
                 </div>
                 {collapse[idx] && (
                   <div className="day-card-body p-3">
-                    <ReactSortable
-                      list={itinerary[day]}
-                      setList={(newList) => {
-                        setItinerary((prev) => ({
-                          ...prev,
-                          [day]: newList,
-                        }));
-                      }}
-                      group="locations"
-                      animation={200}
-                    >
-                      {itinerary[day].map((place) => (
-                        <div
-                          key={place.slug}
-                          className="place-item flex items-center px-2 py-3 border-b border-slate-300 last:border-b-0"
-                          data-day={day}
-                        >
-                          <img
-                            src={place.image}
-                            alt={place.name}
-                            className="w-14 h-14 md:w-16 md:h-16 rounded mr-5"
-                          />
-                          <div>
-                            <h5
-                              className="text-lg font-semibold text-gray-900 cursor-pointer"
-                              onClick={() => zoomToLocation(place.coordinate)}
-                            >
-                              {place.name}
-                            </h5>
-                            <p className="text-sm text-gray-600">
-                              {place.category}
-                            </p>
+                    {isEdit ? (
+                      <ReactSortable
+                        list={itinerary[day]}
+                        setList={(newList) => {
+                          setItinerary((prev) => ({
+                            ...prev,
+                            [day]: newList,
+                          }));
+                        }}
+                        group="locations"
+                        animation={200}
+                      >
+                        {itinerary[day].map((place) => (
+                          <div
+                            key={place.slug}
+                            className="place-item flex items-center px-2 py-3 border-b border-slate-300 last:border-b-0"
+                            data-day={day}
+                          >
+                            <img
+                              src={place.image}
+                              alt={place.name}
+                              className="w-14 h-14 md:w-16 md:h-16 rounded mr-5"
+                            />
+                            <div>
+                              <h5
+                                className="text-lg font-semibold text-gray-900 cursor-pointer"
+                                onClick={() => zoomToLocation(place.coordinate)}
+                              >
+                                {place.name}
+                              </h5>
+                              <p className="text-sm text-gray-600">
+                                {place.category}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </ReactSortable>
+                        ))}
+                      </ReactSortable>
+                    ) : (
+                      <>
+                        {itinerary[day].map((place) => (
+                          <div
+                            key={place.slug}
+                            className="place-item flex items-center px-2 py-3 border-b border-slate-300 last:border-b-0"
+                            data-day={day}
+                          >
+                            <img
+                              src={place.image}
+                              alt={place.name}
+                              className="w-14 h-14 md:w-16 md:h-16 rounded mr-5"
+                            />
+                            <div>
+                              <h5
+                                className="text-lg font-semibold text-gray-900 cursor-pointer"
+                                onClick={() => zoomToLocation(place.coordinate)}
+                              >
+                                {place.name}
+                              </h5>
+                              <p className="text-sm text-gray-600">
+                                {place.category}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -358,7 +401,7 @@ export default function GeneralRecommendationDetailPage() {
 
         {/* Kolom Kanan: Map */}
         <motion.div
-          initial={{ opacity: 0, x: 200 }}
+          initial={{ opacity: 0, x: 100 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
