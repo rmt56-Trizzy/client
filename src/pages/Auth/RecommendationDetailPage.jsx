@@ -1,17 +1,20 @@
 import "leaflet/dist/leaflet.css";
-import React, { createRef, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import FitBounds from "../../components/Fitbounds";
 import { ReactSortable } from "react-sortablejs";
-import { TbMapPinMinus, TbMapPinPlus } from "react-icons/tb";
+import { TbMapPinPlus } from "react-icons/tb";
 import { TbCalendarPlus } from "react-icons/tb";
 import { motion } from "framer-motion";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router";
-import { convertArrayToObject } from "../../utils/convertObjItinery";
+import {
+  convertArrayToObject,
+  convertObjectToArray,
+} from "../../utils/convertObjItinery";
 import LoadingPage from "../../components/LoadingPage";
-import { toastError } from "../../utils/swallAlert";
+import { toastError, toastSuccess } from "../../utils/swallAlert";
 import { VscSaveAs } from "react-icons/vsc";
 import { MdDeleteForever, MdOutlineEditCalendar } from "react-icons/md";
 import { CiShare2 } from "react-icons/ci";
@@ -80,7 +83,7 @@ export const CHECK_VIEW_ACCESS = gql`
 `;
 
 export const EDIT_ITINERARY = gql`
-  mutation EditItinerary($payload: EditInput) {
+  mutation Mutation($payload: EditInput) {
     editItinerary(payload: $payload)
   }
 `;
@@ -115,6 +118,18 @@ export default function RecommendationDetailPage() {
     {
       onCompleted: () => {
         toastError("Successfully added to my trip");
+      },
+      onError: (error) => {
+        toastError(error);
+      },
+    }
+  );
+
+  const [saveEditItinerary, { loading: loadingEditItinerary }] = useMutation(
+    EDIT_ITINERARY,
+    {
+      onCompleted: (data) => {
+        toastSuccess(data.editItinerary);
       },
       onError: (error) => {
         toastError(error);
@@ -224,6 +239,20 @@ export default function RecommendationDetailPage() {
     setItinerary(updatedItinerary);
   };
 
+  const handleSaveEdit = () => {
+    const getItinerary = convertObjectToArray(itinerary);
+    const newItineraries = JSON.stringify(getItinerary);
+    saveEditItinerary({
+      variables: {
+        payload: {
+          recommendationId: id,
+          newItineraries: newItineraries,
+        },
+      },
+    });
+    setIsEdit(false);
+  };
+
   const zoomToLocation = (coordinates) => {
     if (
       lastZoomed &&
@@ -295,10 +324,19 @@ export default function RecommendationDetailPage() {
                 >
                   Cancel
                 </button>
-                <button className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
-                  <VscSaveAs className="text-sm md:text-base lg:text-lg" />
-                  Save to My Trip
-                </button>
+                {loadingEditItinerary ? (
+                  <button className="lg:w-[177.94px] lg:h-[40px] md:w-[160.95px] md:h-[36px] w-[139.95px] justify-center h-[32px] rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSaveEdit}
+                    className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                  >
+                    <VscSaveAs className="text-sm md:text-base lg:text-lg" />
+                    Save to My Trip
+                  </button>
+                )}
               </div>
             ) : (
               <>
