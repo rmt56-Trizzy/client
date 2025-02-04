@@ -89,6 +89,7 @@ export default function RecommendationDetailPage() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [lastZoomed, setLastZoomed] = useState(null);
   const [itinerary, setItinerary] = useState({});
+  const [tempItinerary, setTempItinerary] = useState({});
   const [city, setCity] = useState({});
   const [days, setDays] = useState([]);
   const [collapse, setCollapse] = useState([]);
@@ -129,6 +130,7 @@ export default function RecommendationDetailPage() {
         data.getRecommendationDetails.itineraries
       );
       setItinerary(itinerary);
+      setTempItinerary(itinerary);
       setCity(data.getRecommendationDetails);
       setDays(Object.keys(itinerary));
       if (data?.getRecommendationDetails.userId) {
@@ -206,6 +208,11 @@ export default function RecommendationDetailPage() {
     }
   };
 
+  const handleCancelEdit = () => {
+    setIsEdit(false);
+    setItinerary(tempItinerary);
+  };
+
   const handleDeleteItinerary = (slug) => {
     const updatedItinerary = Object.fromEntries(
       Object.entries(itinerary).map(([day, places]) => [
@@ -281,13 +288,18 @@ export default function RecommendationDetailPage() {
           <div className="flex justify-between items-center mb-2 border-b md:border-b-2 border-gray-300 pb-4">
             <h3 className="text-xl md:text-2xl font-semibold">Itinerary</h3>
             {isEdit ? (
-              <button
-                onClick={() => setIsEdit(false)}
-                className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
-              >
-                <VscSaveAs className="text-sm md:text-base lg:text-lg" />
-                Save
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleCancelEdit}
+                  className="px-4 py-2 rounded-lg  border border-gray-300 hover:bg-red-50 text-red-600 lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                >
+                  Cancel
+                </button>
+                <button className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                  <VscSaveAs className="text-sm md:text-base lg:text-lg" />
+                  Save to My Trip
+                </button>
+              </div>
             ) : (
               <>
                 {isAddToTrip ? (
@@ -388,6 +400,7 @@ export default function RecommendationDetailPage() {
                         {itinerary[day].map((place) => (
                           <div key={place.slug} className="flex md:gap-2 gap-1">
                             <button
+                              className="cursor-pointer"
                               onClick={() => handleDeleteItinerary(place.slug)}
                             >
                               <MdDeleteForever className="text-red-500 md:text-xl" />
