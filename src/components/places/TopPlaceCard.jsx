@@ -5,7 +5,7 @@ import ReactCountryFlag from "react-country-flag";
 export default function TopPlaceCard({ topPlaces }) {
   return (
     <NavLink
-      to={`/recommendation/${topPlaces?._id}`}
+      to={`/general-recommendation/${topPlaces?._id}`}
       className="relative h-full cursor-pointer"
     >
       <div className="absolute top-0 rounded-xl left-0 w-full h-full bg-gradient-to-b from-blue-500/45 to-transparent "></div>

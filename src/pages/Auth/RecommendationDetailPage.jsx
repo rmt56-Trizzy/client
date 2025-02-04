@@ -131,7 +131,7 @@ export default function RecommendationDetailPage() {
   useEffect(() => {
     if (days) {
       setCollapse(Array.from({ length: days.length }, () => true));
-      setCardRefs(Array.from({ length: days.length }, () => React.createRef()));
+      setCardRefs(Array.from({ length: days.length }, () => createRef()));
     }
   }, [days]);
 

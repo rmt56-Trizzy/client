@@ -39,6 +39,7 @@ export default function Navbar() {
 
   const handelLogout = () => {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("userId");
     toastSuccess("Logout successfully");
     setIsLogin(false);
     navigate("/login");

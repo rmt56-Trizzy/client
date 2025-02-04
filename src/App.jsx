@@ -40,7 +40,7 @@ function App() {
               <Route element={<MainPageLayout />}>
                 <Route path="/" element={<Homepage />} />
                 <Route
-                  path="/generalrecommendation/:id"
+                  path="/general-recommendation/:id"
                   element={<GeneralRecommendationDetailPage />}
                 />
               </Route>
