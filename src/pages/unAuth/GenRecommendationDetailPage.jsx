@@ -64,7 +64,7 @@ export default function GeneralRecommendationDetailPage() {
     },
   });
 
-  console.log(data,"ini apa");
+  // console.log(data,"ini apa");
 
   const [addToMyTrip, { loading: loadingAddToTrip }] = useMutation(
     ADD_GEN_REC_TO_MY_TRIP
@@ -98,12 +98,6 @@ export default function GeneralRecommendationDetailPage() {
   }, [days]);
 
   const handleAddToTrip = async () => {
-    const accessToken = localStorage.getItem('access_token');
-    if (!accessToken) {
-      toastError('You must be logged in to add this recommendation to your trip.');
-      return;
-    }
-
     try {
       const { data } = await addToMyTrip({
         variables: {
