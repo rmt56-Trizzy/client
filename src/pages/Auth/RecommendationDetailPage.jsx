@@ -13,8 +13,9 @@ import { convertArrayToObject } from "../../utils/convertObjItinery";
 import LoadingPage from "../../components/LoadingPage";
 import { toastError } from "../../utils/swallAlert";
 import { VscSaveAs } from "react-icons/vsc";
-import { MdOutlineEditCalendar } from "react-icons/md";
+import { MdDeleteForever, MdOutlineEditCalendar } from "react-icons/md";
 import { CiShare2 } from "react-icons/ci";
+import { GrDrag } from "react-icons/gr";
 
 export const GET_RECOMMEND_DETAIL = gql`
   query GetRecommendationDetails($id: ID!) {
@@ -98,24 +99,29 @@ export default function RecommendationDetailPage() {
 
   const params = useParams();
   const { id } = params;
-  const { data, loading, error } = useQuery(GET_RECOMMEND_DETAIL, {
+  const { data, loading } = useQuery(GET_RECOMMEND_DETAIL, {
     variables: {
       id: id,
+    },
+    onError: (error) => {
+      toastError(error);
+      navigate("/");
     },
   });
 
   const [addToMyTrip, { loading: loadingAddToTrip }] = useMutation(
-    ADD_RECOMMEND_TO_MY_TRIP
+    ADD_RECOMMEND_TO_MY_TRIP,
+    {
+      onCompleted: () => {
+        toastError("Successfully added to my trip");
+      },
+      onError: (error) => {
+        toastError(error);
+      },
+    }
   );
 
   if (loading) <LoadingPage />;
-
-  useEffect(() => {
-    if (error) {
-      toastError(error);
-      navigate("/");
-    }
-  }, [error]);
 
   useEffect(() => {
     if (data) {
@@ -125,6 +131,9 @@ export default function RecommendationDetailPage() {
       setItinerary(itinerary);
       setCity(data.getRecommendationDetails);
       setDays(Object.keys(itinerary));
+      if (data?.getRecommendationDetails.userId) {
+        setIsAddToTrip(true);
+      }
     }
   }, [data]);
 
@@ -195,6 +204,17 @@ export default function RecommendationDetailPage() {
         }
       }, 350);
     }
+  };
+
+  const handleDeleteItinerary = (slug) => {
+    const updatedItinerary = Object.fromEntries(
+      Object.entries(itinerary).map(([day, places]) => [
+        day,
+        places.filter((place) => place.slug !== slug),
+      ])
+    );
+
+    setItinerary(updatedItinerary);
   };
 
   const zoomToLocation = (coordinates) => {
@@ -366,26 +386,35 @@ export default function RecommendationDetailPage() {
                         animation={200}
                       >
                         {itinerary[day].map((place) => (
-                          <div
-                            key={place.slug}
-                            className="place-item flex items-center px-2 py-3 border-b border-slate-300 last:border-b-0"
-                            data-day={day}
-                          >
-                            <img
-                              src={place.image}
-                              alt={place.name}
-                              className="w-14 h-14 md:w-16 md:h-16 rounded mr-5"
-                            />
-                            <div>
-                              <h5
-                                className="text-lg font-semibold text-gray-900 cursor-pointer"
-                                onClick={() => zoomToLocation(place.coordinate)}
-                              >
-                                {place.name}
-                              </h5>
-                              <p className="text-sm text-gray-600">
-                                {place.category}
-                              </p>
+                          <div key={place.slug} className="flex md:gap-2 gap-1">
+                            <button
+                              onClick={() => handleDeleteItinerary(place.slug)}
+                            >
+                              <MdDeleteForever className="text-red-500 md:text-xl" />
+                            </button>
+                            <div
+                              className="place-item flex items-center w-full px-2 py-3 border-b border-slate-300 last:border-b-0"
+                              data-day={day}
+                            >
+                              <img
+                                src={place.image}
+                                alt={place.name}
+                                className="w-14 h-14 md:w-16 md:h-16 rounded mr-5"
+                              />
+                              <div className="me-auto">
+                                <h5
+                                  className="md:text-xl text-sm font-semibold text-gray-900 cursor-pointer line-clamp-2"
+                                  onClick={() =>
+                                    zoomToLocation(place.coordinate)
+                                  }
+                                >
+                                  {place.name}
+                                </h5>
+                                <p className="md:text-sm text-xs text-gray-600">
+                                  {place.category}
+                                </p>
+                              </div>
+                              <GrDrag className="md:text-2xl text-xl text-gray-400 cursor-grab justify-end" />
                             </div>
                           </div>
                         ))}
