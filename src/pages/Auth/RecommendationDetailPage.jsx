@@ -14,12 +14,13 @@ import {
   convertObjectToArray,
 } from "../../utils/convertObjItinery";
 import LoadingPage from "../../components/LoadingPage";
-import { toastError, toastSuccess } from "../../utils/swallAlert";
+import { swallWarning, toastError, toastSuccess } from "../../utils/swallAlert";
 import { VscSaveAs } from "react-icons/vsc";
 import { MdDeleteForever, MdOutlineEditCalendar } from "react-icons/md";
 import { CiShare2 } from "react-icons/ci";
 import { GrDrag } from "react-icons/gr";
 import ShareModal from "../../components/ShareModal";
+import Swal from "sweetalert2";
 
 export const GET_RECOMMEND_DETAIL = gql`
   query GetRecommendationDetails($id: ID!) {
@@ -60,26 +61,7 @@ export const GENERATE_VIEW_ACCESS = gql`
 
 export const CHECK_VIEW_ACCESS = gql`
   query CheckViewAccess($payload: CheckViewAccessInput) {
-    checkViewAccess(payload: $payload) {
-      _id
-      city
-      country
-      countryCode
-      cityImage
-      daysCount
-      itineraries {
-        day
-        locations {
-          slug
-          name
-          image
-          category
-          coordinates
-        }
-      }
-      userId
-      viewAccess
-    }
+    checkViewAccess(payload: $payload)
   }
 `;
 
@@ -103,6 +85,7 @@ export default function RecommendationDetailPage() {
   const [isModalShareOpen, setIsModalShareOpen] = useState(false);
   const [accessUID, setAccesUID] = useState("");
   const [isCanAddTrip, setIsCanAddTrip] = useState(false);
+  const [isValidViewAccess, setIsValidViewAccess] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -138,6 +121,16 @@ export default function RecommendationDetailPage() {
     }
   );
 
+  const { data: checkViewAccessData, loading: loadingCheckViewAccess } =
+    useQuery(CHECK_VIEW_ACCESS, {
+      variables: {
+        payload: {
+          recommendationId: id,
+          viewAccess: viewAccess,
+        },
+      },
+    });
+
   const [addToMyTrip, { loading: loadingAddToTrip }] = useMutation(
     ADD_RECOMMEND_TO_MY_TRIP,
     {
@@ -164,6 +157,7 @@ export default function RecommendationDetailPage() {
   );
 
   if (loading) <LoadingPage />;
+  if (loadingCheckViewAccess) <LoadingPage />;
 
   useEffect(() => {
     if (data) {
@@ -187,9 +181,23 @@ export default function RecommendationDetailPage() {
       ) {
         setIsAddToTrip(true);
       }
-      setIsCanAddTrip(true);
+      if (isValidViewAccess) {
+        setIsCanAddTrip(false);
+      } else {
+        setIsCanAddTrip(true);
+      }
     }
-  }, [data]);
+  }, [data, isValidViewAccess]);
+
+  useEffect(() => {
+    if (checkViewAccessData) {
+      if (!checkViewAccessData.checkViewAccess) {
+        toastError("You have no access");
+        navigate("/");
+      }
+      setIsValidViewAccess(true);
+    }
+  }, [checkViewAccessData]);
 
   useEffect(() => {
     if (days) {
@@ -274,16 +282,31 @@ export default function RecommendationDetailPage() {
   };
 
   const handleDeleteItinerary = (slug) => {
-    const updatedItinerary = Object.fromEntries(
-      Object.entries(itinerary).map(([day, places]) => [
-        day,
-        places.filter((place) => place.slug !== slug),
-      ])
-    );
-
-    setItinerary(updatedItinerary);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedItinerary = Object.fromEntries(
+          Object.entries(itinerary).map(([day, places]) => [
+            day,
+            places.filter((place) => place.slug !== slug),
+          ])
+        );
+        setItinerary(updatedItinerary);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your itinerary has been deleted.",
+          icon: "success",
+        });
+      }
+    });
   };
-
   const handleSaveEdit = () => {
     const getItinerary = convertObjectToArray(itinerary);
     const newItineraries = JSON.stringify(getItinerary);
@@ -295,6 +318,7 @@ export default function RecommendationDetailPage() {
         },
       },
     });
+    setTempItinerary(itinerary);
     setIsEdit(false);
   };
 
