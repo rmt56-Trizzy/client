@@ -1,20 +1,26 @@
 import "leaflet/dist/leaflet.css";
-import React, { createRef, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import FitBounds from "../../components/Fitbounds";
 import { ReactSortable } from "react-sortablejs";
-import { TbMapPinMinus, TbMapPinPlus } from "react-icons/tb";
+import { TbMapPinPlus } from "react-icons/tb";
 import { TbCalendarPlus } from "react-icons/tb";
 import { motion } from "framer-motion";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useNavigate, useParams } from "react-router";
-import { convertArrayToObject } from "../../utils/convertObjItinery";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import {
+  convertArrayToObject,
+  convertObjectToArray,
+} from "../../utils/convertObjItinery";
 import LoadingPage from "../../components/LoadingPage";
-import { toastError } from "../../utils/swallAlert";
+import { swallWarning, toastError, toastSuccess } from "../../utils/swallAlert";
 import { VscSaveAs } from "react-icons/vsc";
-import { MdOutlineEditCalendar } from "react-icons/md";
+import { MdDeleteForever, MdOutlineEditCalendar } from "react-icons/md";
 import { CiShare2 } from "react-icons/ci";
+import { GrDrag } from "react-icons/gr";
+import ShareModal from "../../components/ShareModal";
+import Swal from "sweetalert2";
 
 export const GET_RECOMMEND_DETAIL = gql`
   query GetRecommendationDetails($id: ID!) {
@@ -55,31 +61,12 @@ export const GENERATE_VIEW_ACCESS = gql`
 
 export const CHECK_VIEW_ACCESS = gql`
   query CheckViewAccess($payload: CheckViewAccessInput) {
-    checkViewAccess(payload: $payload) {
-      _id
-      city
-      country
-      countryCode
-      cityImage
-      daysCount
-      itineraries {
-        day
-        locations {
-          slug
-          name
-          image
-          category
-          coordinates
-        }
-      }
-      userId
-      viewAccess
-    }
+    checkViewAccess(payload: $payload)
   }
 `;
 
 export const EDIT_ITINERARY = gql`
-  mutation EditItinerary($payload: EditInput) {
+  mutation Mutation($payload: EditInput) {
     editItinerary(payload: $payload)
   }
 `;
@@ -88,34 +75,89 @@ export default function RecommendationDetailPage() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [lastZoomed, setLastZoomed] = useState(null);
   const [itinerary, setItinerary] = useState({});
+  const [tempItinerary, setTempItinerary] = useState({});
   const [city, setCity] = useState({});
   const [days, setDays] = useState([]);
   const [collapse, setCollapse] = useState([]);
   const [cardRefs, setCardRefs] = useState([]);
   const [isAddToTrip, setIsAddToTrip] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isModalShareOpen, setIsModalShareOpen] = useState(false);
+  const [accessUID, setAccesUID] = useState("");
+  const [isCanAddTrip, setIsCanAddTrip] = useState(false);
+  const [isValidViewAccess, setIsValidViewAccess] = useState(false);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const viewAccess = searchParams.get("view-access");
+
+  const token = localStorage.getItem("access_token");
   const params = useParams();
   const { id } = params;
-  const { data, loading, error } = useQuery(GET_RECOMMEND_DETAIL, {
+  const { data, loading } = useQuery(GET_RECOMMEND_DETAIL, {
     variables: {
       id: id,
     },
+    onError: (error) => {
+      toastError(error);
+      navigate("/");
+    },
   });
 
+  if (!token && !viewAccess) {
+    toastError("You have no access");
+    navigate("/");
+  }
+
+  const [generateViewAccess, { loading: loadingViewAccess }] = useMutation(
+    GENERATE_VIEW_ACCESS,
+    {
+      onCompleted: (data) => {
+        setAccesUID(data.generateViewAccess);
+      },
+      onError: (error) => {
+        toastError(error);
+      },
+    }
+  );
+
+  const { data: checkViewAccessData, loading: loadingCheckViewAccess } =
+    useQuery(CHECK_VIEW_ACCESS, {
+      variables: {
+        payload: {
+          recommendationId: id,
+          viewAccess: viewAccess,
+        },
+      },
+    });
+
   const [addToMyTrip, { loading: loadingAddToTrip }] = useMutation(
-    ADD_RECOMMEND_TO_MY_TRIP
+    ADD_RECOMMEND_TO_MY_TRIP,
+    {
+      onCompleted: () => {
+        toastSuccess("Successfully added to my trip");
+        setIsAddToTrip(true);
+      },
+      onError: (error) => {
+        toastError(error);
+      },
+    }
+  );
+
+  const [saveEditItinerary, { loading: loadingEditItinerary }] = useMutation(
+    EDIT_ITINERARY,
+    {
+      onCompleted: (data) => {
+        toastSuccess(data.editItinerary);
+      },
+      onError: (error) => {
+        toastError(error);
+      },
+    }
   );
 
   if (loading) <LoadingPage />;
-
-  useEffect(() => {
-    if (error) {
-      toastError(error);
-      navigate("/");
-    }
-  }, [error]);
+  if (loadingCheckViewAccess) <LoadingPage />;
 
   useEffect(() => {
     if (data) {
@@ -123,10 +165,39 @@ export default function RecommendationDetailPage() {
         data.getRecommendationDetails.itineraries
       );
       setItinerary(itinerary);
+      setTempItinerary(itinerary);
       setCity(data.getRecommendationDetails);
       setDays(Object.keys(itinerary));
+      if (
+        data?.getRecommendationDetails.userId !==
+          localStorage.getItem("userId") &&
+        !viewAccess
+      ) {
+        toastError("You have no access");
+        navigate("/");
+      }
+      if (
+        data?.getRecommendationDetails.userId === localStorage.getItem("userId")
+      ) {
+        setIsAddToTrip(true);
+      }
+      if (isValidViewAccess) {
+        setIsCanAddTrip(false);
+      } else {
+        setIsCanAddTrip(true);
+      }
     }
-  }, [data]);
+  }, [data, isValidViewAccess]);
+
+  useEffect(() => {
+    if (checkViewAccessData) {
+      if (!checkViewAccessData.checkViewAccess) {
+        toastError("You have no access");
+        navigate("/");
+      }
+      setIsValidViewAccess(true);
+    }
+  }, [checkViewAccessData]);
 
   useEffect(() => {
     if (days) {
@@ -142,7 +213,6 @@ export default function RecommendationDetailPage() {
           recommendationId: id,
         },
       });
-      setIsAddToTrip(true);
     } catch (error) {
       toastError(error);
     }
@@ -195,6 +265,61 @@ export default function RecommendationDetailPage() {
         }
       }, 350);
     }
+  };
+
+  const handleShare = () => {
+    generateViewAccess({
+      variables: {
+        recommendationId: id,
+      },
+    });
+    setIsModalShareOpen(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEdit(false);
+    setItinerary(tempItinerary);
+  };
+
+  const handleDeleteItinerary = (slug) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedItinerary = Object.fromEntries(
+          Object.entries(itinerary).map(([day, places]) => [
+            day,
+            places.filter((place) => place.slug !== slug),
+          ])
+        );
+        setItinerary(updatedItinerary);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your itinerary has been deleted.",
+          icon: "success",
+        });
+      }
+    });
+  };
+  const handleSaveEdit = () => {
+    const getItinerary = convertObjectToArray(itinerary);
+    const newItineraries = JSON.stringify(getItinerary);
+    saveEditItinerary({
+      variables: {
+        payload: {
+          recommendationId: id,
+          newItineraries: newItineraries,
+        },
+      },
+    });
+    setTempItinerary(itinerary);
+    setIsEdit(false);
   };
 
   const zoomToLocation = (coordinates) => {
@@ -261,21 +386,44 @@ export default function RecommendationDetailPage() {
           <div className="flex justify-between items-center mb-2 border-b md:border-b-2 border-gray-300 pb-4">
             <h3 className="text-xl md:text-2xl font-semibold">Itinerary</h3>
             {isEdit ? (
-              <button
-                onClick={() => setIsEdit(false)}
-                className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
-              >
-                <VscSaveAs className="text-sm md:text-base lg:text-lg" />
-                Save
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleCancelEdit}
+                  className="px-4 py-2 rounded-lg  border border-gray-300 hover:bg-red-50 text-red-600 lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                >
+                  Cancel
+                </button>
+                {loadingEditItinerary ? (
+                  <button className="lg:w-[177.94px] lg:h-[40px] md:w-[160.95px] md:h-[36px] w-[139.95px] justify-center h-[32px] rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSaveEdit}
+                    className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                  >
+                    <VscSaveAs className="text-sm md:text-base lg:text-lg" />
+                    Save to My Trip
+                  </button>
+                )}
+              </div>
             ) : (
               <>
                 {isAddToTrip ? (
                   <div className="flex items-center gap-2">
-                    <button className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                    <button
+                      onClick={handleShare}
+                      className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                    >
                       <CiShare2 className="text-sm md:text-base lg:text-lg" />
                       Share Trip
                     </button>
+                    <ShareModal
+                      isOpen={isModalShareOpen}
+                      onClose={() => setIsModalShareOpen(false)}
+                      viewUID={accessUID}
+                      recommendationId={id}
+                    />
                     <button
                       onClick={() => setIsEdit(true)}
                       className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
@@ -286,18 +434,22 @@ export default function RecommendationDetailPage() {
                   </div>
                 ) : (
                   <>
-                    {loadingAddToTrip ? (
-                      <button className="lg:w-[170.89px] lg:h-[40px] md:w-[154.78px] md:h-[36px] w-[134.67px] h-[32px] justify-center rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
-                        <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={handleAddToTrip}
-                        className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
-                      >
-                        <TbMapPinPlus className="text-sm md:text-base lg:text-lg -mt-1" />
-                        Add to My Trip
-                      </button>
+                    {isCanAddTrip && (
+                      <>
+                        {loadingAddToTrip ? (
+                          <button className="lg:w-[170.89px] lg:h-[40px] md:w-[154.78px] md:h-[36px] w-[134.67px] h-[32px] justify-center rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1">
+                            <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handleAddToTrip}
+                            className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                          >
+                            <TbMapPinPlus className="text-sm md:text-base lg:text-lg -mt-1" />
+                            Add to My Trip
+                          </button>
+                        )}
+                      </>
                     )}
                   </>
                 )}
@@ -366,26 +518,36 @@ export default function RecommendationDetailPage() {
                         animation={200}
                       >
                         {itinerary[day].map((place) => (
-                          <div
-                            key={place.slug}
-                            className="place-item flex items-center px-2 py-3 border-b border-slate-300 last:border-b-0"
-                            data-day={day}
-                          >
-                            <img
-                              src={place.image}
-                              alt={place.name}
-                              className="w-14 h-14 md:w-16 md:h-16 rounded mr-5"
-                            />
-                            <div>
-                              <h5
-                                className="text-lg font-semibold text-gray-900 cursor-pointer"
-                                onClick={() => zoomToLocation(place.coordinate)}
-                              >
-                                {place.name}
-                              </h5>
-                              <p className="text-sm text-gray-600">
-                                {place.category}
-                              </p>
+                          <div key={place.slug} className="flex md:gap-2 gap-1">
+                            <button
+                              className="cursor-pointer"
+                              onClick={() => handleDeleteItinerary(place.slug)}
+                            >
+                              <MdDeleteForever className="text-red-500 md:text-xl" />
+                            </button>
+                            <div
+                              className="place-item flex items-center w-full px-2 py-3 border-b border-slate-300 last:border-b-0"
+                              data-day={day}
+                            >
+                              <img
+                                src={place.image}
+                                alt={place.name}
+                                className="w-14 h-14 md:w-16 md:h-16 rounded mr-5"
+                              />
+                              <div className="me-auto">
+                                <h5
+                                  className="md:text-xl text-sm font-semibold text-gray-900 cursor-pointer line-clamp-2"
+                                  onClick={() =>
+                                    zoomToLocation(place.coordinate)
+                                  }
+                                >
+                                  {place.name}
+                                </h5>
+                                <p className="md:text-sm text-xs text-gray-600">
+                                  {place.category}
+                                </p>
+                              </div>
+                              <GrDrag className="md:text-2xl text-xl text-gray-400 cursor-grab justify-end" />
                             </div>
                           </div>
                         ))}
