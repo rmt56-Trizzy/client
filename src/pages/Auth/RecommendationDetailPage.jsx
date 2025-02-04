@@ -1,5 +1,5 @@
 import "leaflet/dist/leaflet.css";
-import React, { useEffect, useRef, useState } from "react";
+import { createRef, useEffect, useRef, useState } from "react";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import FitBounds from "../../components/Fitbounds";
@@ -14,9 +14,13 @@ import {
   convertObjectToArray,
 } from "../../utils/convertObjItinery";
 import LoadingPage from "../../components/LoadingPage";
-import { swallWarning, toastError, toastSuccess } from "../../utils/swallAlert";
+import { toastError, toastSuccess } from "../../utils/swallAlert";
 import { VscSaveAs } from "react-icons/vsc";
-import { MdDeleteForever, MdOutlineEditCalendar } from "react-icons/md";
+import {
+  MdDeleteForever,
+  MdOutlineEditCalendar,
+  MdOutlineKeyboardArrowLeft,
+} from "react-icons/md";
 import { CiShare2 } from "react-icons/ci";
 import { GrDrag } from "react-icons/gr";
 import ShareModal from "../../components/ShareModal";
@@ -94,6 +98,24 @@ export default function RecommendationDetailPage() {
   const token = localStorage.getItem("access_token");
   const params = useParams();
   const { id } = params;
+  if (!token && !viewAccess) {
+    toastError("You have no access");
+    navigate("/");
+  }
+
+  const { data: checkViewAccessData, loading: loadingCheckViewAccess } =
+    useQuery(CHECK_VIEW_ACCESS, {
+      variables: {
+        payload: {
+          recommendationId: id,
+          viewAccess: viewAccess,
+        },
+      },
+      onCompleted: () => {
+        setIsValidViewAccess(true);
+      },
+    });
+
   const { data, loading } = useQuery(GET_RECOMMEND_DETAIL, {
     variables: {
       id: id,
@@ -104,32 +126,14 @@ export default function RecommendationDetailPage() {
     },
   });
 
-  if (!token && !viewAccess) {
-    toastError("You have no access");
-    navigate("/");
-  }
-
-  const [generateViewAccess, { loading: loadingViewAccess }] = useMutation(
-    GENERATE_VIEW_ACCESS,
-    {
-      onCompleted: (data) => {
-        setAccesUID(data.generateViewAccess);
-      },
-      onError: (error) => {
-        toastError(error);
-      },
-    }
-  );
-
-  const { data: checkViewAccessData, loading: loadingCheckViewAccess } =
-    useQuery(CHECK_VIEW_ACCESS, {
-      variables: {
-        payload: {
-          recommendationId: id,
-          viewAccess: viewAccess,
-        },
-      },
-    });
+  const [generateViewAccess] = useMutation(GENERATE_VIEW_ACCESS, {
+    onCompleted: (data) => {
+      setAccesUID(data.generateViewAccess);
+    },
+    onError: (error) => {
+      toastError(error);
+    },
+  });
 
   const [addToMyTrip, { loading: loadingAddToTrip }] = useMutation(
     ADD_RECOMMEND_TO_MY_TRIP,
@@ -160,36 +164,6 @@ export default function RecommendationDetailPage() {
   if (loadingCheckViewAccess) <LoadingPage />;
 
   useEffect(() => {
-    if (data) {
-      const itinerary = convertArrayToObject(
-        data.getRecommendationDetails.itineraries
-      );
-      setItinerary(itinerary);
-      setTempItinerary(itinerary);
-      setCity(data.getRecommendationDetails);
-      setDays(Object.keys(itinerary));
-      if (
-        data?.getRecommendationDetails.userId !==
-          localStorage.getItem("userId") &&
-        !viewAccess
-      ) {
-        toastError("You have no access");
-        navigate("/");
-      }
-      if (
-        data?.getRecommendationDetails.userId === localStorage.getItem("userId")
-      ) {
-        setIsAddToTrip(true);
-      }
-      if (isValidViewAccess) {
-        setIsCanAddTrip(false);
-      } else {
-        setIsCanAddTrip(true);
-      }
-    }
-  }, [data, isValidViewAccess]);
-
-  useEffect(() => {
     if (checkViewAccessData) {
       if (!checkViewAccessData.checkViewAccess) {
         toastError("You have no access");
@@ -198,6 +172,50 @@ export default function RecommendationDetailPage() {
       setIsValidViewAccess(true);
     }
   }, [checkViewAccessData]);
+
+  useEffect(() => {
+    if (data) {
+      const itinerary = convertArrayToObject(
+        data.getRecommendationDetails.itineraries
+      );
+      setItinerary(itinerary);
+      setTempItinerary(itinerary);
+      setCity(data.getRecommendationDetails);
+      setDays(Object.keys(itinerary));
+      if (isValidViewAccess) {
+        setIsCanAddTrip(false);
+      } else {
+        setIsCanAddTrip(true);
+      }
+
+      if (data.getRecommendationDetails.userId) {
+        if (
+          data.getRecommendationDetails.userId ===
+          localStorage.getItem("userId")
+        ) {
+          setIsCanAddTrip(true);
+          setIsAddToTrip(true);
+          return;
+        }
+        if (
+          data.getRecommendationDetails.userId !==
+            localStorage.getItem("userId") &&
+          isValidViewAccess
+        ) {
+          setIsCanAddTrip(false);
+          return;
+        }
+        if (
+          data.getRecommendationDetails.userId !==
+            localStorage.getItem("userId") &&
+          !isValidViewAccess
+        ) {
+          toastError("You have no access");
+          navigate("/");
+        }
+      }
+    }
+  }, [data, isValidViewAccess]);
 
   useEffect(() => {
     if (days) {
@@ -348,13 +366,19 @@ export default function RecommendationDetailPage() {
         >
           {/* Thumbnail */}
           <div className="thumbnail-section relative mb-4">
+            <button
+              className="absolute bg-gray-700/50 rounded-md top-2 md:top-4 text-white hover:scale-110 cursor-pointer md:left-4 left-2 z-5"
+              onClick={() => navigate(-1)}
+            >
+              <MdOutlineKeyboardArrowLeft className="md:text-4xl text-3xl" />
+            </button>
             <img
               src={city?.cityImage}
               alt={city?.city}
               className="w-full rounded-lg"
             />
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-60 rounded-b-lg"></div>
-            <div className="absolute bottom-[43px] left-4 bg-opacity-60 px-2 py-1 rounded">
+            <div className="absolute md:bottom-[43px] bottom-5 md:left-4 left-2 bg-opacity-60 px-2 py-1 rounded">
               <h2 className="text-white text-2xl md:text-4xl font-medium truncate">
                 {city?.city} for {city?.daysCount} days
               </h2>
@@ -389,7 +413,7 @@ export default function RecommendationDetailPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleCancelEdit}
-                  className="px-4 py-2 rounded-lg  border border-gray-300 hover:bg-red-50 text-red-600 lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                  className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-400 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
                 >
                   Cancel
                 </button>
@@ -400,7 +424,7 @@ export default function RecommendationDetailPage() {
                 ) : (
                   <button
                     onClick={handleSaveEdit}
-                    className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                    className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
                   >
                     <VscSaveAs className="text-sm md:text-base lg:text-lg" />
                     Save to My Trip
@@ -426,7 +450,7 @@ export default function RecommendationDetailPage() {
                     />
                     <button
                       onClick={() => setIsEdit(true)}
-                      className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
+                      className="px-4 py-2 rounded-lg bg-[#21bcbe] hover:bg-teal-600 text-white lg:text-base md:text-sm text-xs cursor-pointer flex items-center md:gap-2 gap-1"
                     >
                       <MdOutlineEditCalendar className="text-sm md:text-base lg:text-lg" />
                       Edit Trip
@@ -466,7 +490,7 @@ export default function RecommendationDetailPage() {
                   onClick={() => handleSelectDay(idx)}
                   className={`py-2 rounded-3xl cursor-pointer md:outline-[3px] outline-[2px] w-[50px] md:w-[100px] text-xs md:text-base font-semibold ${
                     selectedDay === dayLabel
-                      ? "outline-black bg-slate-100"
+                      ? "outline-[#21bcbe] bg-slate-100"
                       : "outline-slate-300"
                   }`}
                 >

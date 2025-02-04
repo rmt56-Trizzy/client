@@ -3,6 +3,8 @@ import { IoIosSend } from "react-icons/io";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useParams } from "react-router";
 import PropTypes from "prop-types";
+import chatAnimation from "../../animations/chatAnimation.json";
+import Lottie from "lottie-react";
 
 const GET_CHAT_BY_ID = gql`
   query GetChatById($id: ID!) {
@@ -60,9 +62,8 @@ export default function ChatBox({ generateRecommendation }) {
 
   const params = useParams();
   const { id } = params;
-  console.log("🚀 ~ params:", id);
 
-  const { data, loading, error } = useQuery(GET_CHAT_BY_ID, {
+  const { data } = useQuery(GET_CHAT_BY_ID, {
     variables: {
       id: id,
     },
@@ -80,7 +81,7 @@ export default function ChatBox({ generateRecommendation }) {
   });
 
   const [saveReplyFromUser] = useMutation(SAVE_CHAT_FROM_USER);
-  const [getReplyFromBot] = useMutation(GET_REPLY_FROM_BOT, {
+  const [getReplyFromBot, { loading }] = useMutation(GET_REPLY_FROM_BOT, {
     onCompleted: (data) => {
       setChatMessages(data.getReplyFromBot.messages);
     },
@@ -138,7 +139,11 @@ export default function ChatBox({ generateRecommendation }) {
   };
 
   return (
-    <div className="w-full shadow-2xl rounded-xl">
+    <div
+      className={`w-full shadow-2xl rounded-xl ${
+        endChat ? "hidden md:block" : ""
+      }`}
+    >
       {/* Chat Header */}
       <div className="bg-gradient-to-r from-teal-400 to-teal-500 text-white rounded-t-xl md:py-6 py-4 flex items-center px-6 font-bold text-base md:text-2xl shadow-md">
         <div className="flex items-center gap-3">
@@ -150,28 +155,35 @@ export default function ChatBox({ generateRecommendation }) {
       {/* Messages Container */}
       <div
         ref={chatContainerRef}
-        className="bg-white h-[360px] md:h-[500px] overflow-y-scroll pl-4 py-4 md:pl-6 md:pr-2 space-y-4">
+        className="bg-white h-[360px] md:h-[500px] overflow-y-scroll pl-4 py-4 md:pl-6 md:pr-2 space-y-4"
+      >
         {chatMessages.map((msg, index) => (
           <div
             key={index}
             className={`flex ${
               msg.sender === "User" ? "justify-end" : "justify-start"
-            } w-full`}>
+            } w-full`}
+          >
             <div
               className={`rounded-2xl py-1 px-3 md:py-1.5 ${
                 msg.sender === "User"
                   ? "bg-gradient-to-r from-teal-400 to-teal-500 text-white shadow-lg"
                   : "bg-gray-100 shadow"
-              } w-fit max-w-[300px] transform transition-all duration-200 hover:scale-102 text-xs md:text-base`}>
+              } w-fit max-w-[300px] transform transition-all duration-200 hover:scale-102 text-xs md:text-base`}
+            >
               <p
                 className={`${
                   msg.sender === "User" ? "text-right" : "text-left"
-                } leading-relaxed`}>
+                } leading-relaxed`}
+              >
                 {msg.message}
               </p>
             </div>
           </div>
         ))}
+        {loading && (
+          <Lottie animationData={chatAnimation} loop={true} className="w-20" />
+        )}
       </div>
 
       {/* Input & Send Button */}
@@ -191,13 +203,15 @@ export default function ChatBox({ generateRecommendation }) {
         />
         {endChat ? (
           <button
-            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}>
+            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}
+          >
             <IoIosSend className="md:text-2xl text-xl text-white" />
           </button>
         ) : (
           <button
             onClick={handleSendMessage}
-            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-105 cursor-pointer`}>
+            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-105 cursor-pointer`}
+          >
             <IoIosSend className="md:text-2xl text-xl text-white" />
           </button>
         )}
@@ -206,14 +220,16 @@ export default function ChatBox({ generateRecommendation }) {
         <div className="p-4 bg-white rounded-b-xl flex items-center w-full">
           {endChat ? (
             <button
-              className={`w-full rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}>
-              Generating Your Recommendations...
+              className={`w-full rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}
+            >
+              Recommendation Generated
             </button>
           ) : (
             <button
               onClick={handleGenerateResponse}
-              className={`w-full rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-102 cursor-pointer
-              `}>
+              className={`w-full text-white rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-102 cursor-pointer
+              `}
+            >
               End Chat and Generate Recommendations
             </button>
           )}

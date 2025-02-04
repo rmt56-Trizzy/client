@@ -109,11 +109,26 @@ export default function Homepage() {
           className="text-white font-bold lg:text-4xl text-xl md:text-2xl w-full absolute left-1/2 text-center -translate-x-1/2 top-8 md:top-18 lg:top-1/2 lg:-translate-y-1/2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}>
+          transition={{ duration: 1, delay: 0.5 }}
+        >
           Hi, Welcome to Trizzy
           <p className="lg:p-2 md:p-1 hidden md:block">
             Velzy will help you to plan your next trip!
           </p>
+          <motion.img
+            src="/img/Velzy.png"
+            alt="Velzy"
+            className="h-[200px] w-[350px] mt-2 text-center mx-auto hidden md:block"
+            initial={{ y: 0 }}
+            animate={{ y: [0, -10, 0] }}
+            transition={{
+              duration: 1.8,
+              delay: 0.5,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "easeInOut",
+            }}
+          />
         </motion.span>
         <div className="absolute -bottom-14 left-1/2 -translate-x-1/2">
           <CardChatBox />
@@ -123,7 +138,8 @@ export default function Homepage() {
         className="md:mt-24 mt-19 md:mx-auto lg:w-[1000px] md:w-[750px] px-4 md:px-0"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}>
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
         <p className="lg:text-3xl md:text-2xl text-xl font-bold text-slate-700">
           Top Places to Visit
         </p>
@@ -134,8 +150,8 @@ export default function Homepage() {
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[100px]"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}>
-              {" "}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
               <NavLink to={`/general-recommendation/${place._id}`}>
                 <TopPlaceCard topPlaces={place} />
               </NavLink>
@@ -143,14 +159,17 @@ export default function Homepage() {
           ))}
         </div>
         <div className="grid grid-cols-3 md:gap-5 gap-2 md:mt-5 mt-2">
-          {topPlaces.slice(2, 5).map((item) => (
+          {topPlaces.slice(2, 5).map((place) => (
             <motion.div
-              key={item._id}
+              key={place._id}
               className="col-span-1 lg:h-[270px] md:h-[190px] h-[90px]"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}>
-              <TopPlaceCard topPlaces={item} />
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <NavLink to={`/general-recommendation/${place._id}`}>
+                <TopPlaceCard topPlaces={place} />
+              </NavLink>
             </motion.div>
           ))}
         </div>
@@ -160,7 +179,8 @@ export default function Homepage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}>
+            viewport={{ once: true }}
+          >
             Simplify your travel using our trip planner AI
           </motion.p>
           <motion.p
@@ -168,7 +188,8 @@ export default function Homepage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
-            className="font-base md:text-base text-xs md:mt-10 mt-5 md:px-10">
+            className="font-base md:text-base text-xs md:mt-10 mt-5 md:px-10"
+          >
             Meet Velzy from Trizzy, your ultimate AI travel assistant. From
             finding the perfect city to crafting the ideal itinerary, Trizzy
             makes planning your trips hassle-free. No more wasting your time
@@ -184,7 +205,8 @@ export default function Homepage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
-            className="flex rounded-lg md:w-[330px] w-[180px] md:mt-10 mt-5 bg-slate-700 text-white mx-auto gap-3 justify-center items-center">
+            className="flex rounded-lg md:w-[330px] w-[180px] md:mt-10 mt-5 bg-slate-700 text-white mx-auto gap-3 justify-center items-center"
+          >
             <button className="md:py-3 py-2.5 md:text-2xl text-sm">
               Plan a new trip
             </button>
@@ -200,7 +222,8 @@ export default function Homepage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
               viewport={{ once: true }}
-              className="lg:text-6xl md:text-4xl text-xl md:w-[450px] font-bold lg:w-[700px] text-center w-[250px] mx-auto">
+              className="lg:text-6xl md:text-4xl text-xl md:w-[450px] font-bold lg:w-[700px] text-center w-[250px] mx-auto"
+            >
               Cool things people have said about Trizzy
             </motion.p>
             <div className="md:mt-10 lg:mt-18 mt-8">
@@ -209,11 +232,13 @@ export default function Homepage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, delay: 0.3 }}
                 viewport={{ once: true }}
-                className="grid lg:grid-cols-2 grid-cols-1  md:gap-5 gap-2">
+                className="grid lg:grid-cols-2 grid-cols-1  md:gap-5 gap-2"
+              >
                 {userReviews.slice(0, 2).map((review) => (
                   <div
                     key={review.id}
-                    className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]">
+                    className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
+                  >
                     <ReviewCard
                       name={review.name}
                       review={review.review}
@@ -227,11 +252,13 @@ export default function Homepage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, delay: 0.3 }}
                 viewport={{ once: true }}
-                className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-2 md:mt-5 mt-2">
+                className="grid lg:grid-cols-3 grid-cols-1 md:gap-5 gap-2 md:mt-5 mt-2"
+              >
                 {userReviews.slice(2, 5).map((review) => (
                   <div
                     key={review.id}
-                    className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]">
+                    className="col-span-1 lg:h-[170px] md:h-[140px] h-[100px]"
+                  >
                     <ReviewCard
                       name={review.name}
                       review={review.review}
@@ -250,7 +277,8 @@ export default function Homepage() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
           viewport={{ once: true }}
-          className="font-bold text-center md:text-4xl lg:text-5xl text-xl ">
+          className="font-bold text-center md:text-4xl lg:text-5xl text-xl "
+        >
           Powerd by trusted names
         </motion.p>
         <div className="flex flex-col items-center md:mt-10 mt-3 gap-4 md:gap-5">

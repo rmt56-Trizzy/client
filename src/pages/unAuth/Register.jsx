@@ -19,7 +19,7 @@ const REGISTER = gql`
 
 export default function Register() {
   const [input, setInput] = useState({
-    email: "adada@mail.com",
+    email: "",
     fullName: "",
     password: "",
   });
@@ -135,7 +135,7 @@ export default function Register() {
                   value={input.email}
                   onChange={handleEmailChange}
                   className="mt-4 w-full border text-xs md:text-sm border-gray-300 rounded-lg px-4 md:py-3 py-2 focus:outline-none focus:border-blue-500"
-                  placeholder="id@email.com"
+                  placeholder="Email"
                   required
                 />
               </div>
@@ -169,7 +169,7 @@ export default function Register() {
                 </div>
 
                 <p className="text-xs sm:text-sm text-gray-500 text-center">
-                  By signing in, I agree to Agoda&apos;s{" "}
+                  By signing up, I agree to Trizzy{" "}
                   <span className="text-blue-500 cursor-pointer hover:underline">
                     Terms of Use
                   </span>{" "}
@@ -239,9 +239,9 @@ export default function Register() {
                 onChange={() => setIsAgreeToTerms(!isAgreeToTerms)}
               />
               <label className="md:text-sm md:mt-10 text-xs text-gray-500">
-                I agree to receive updates and promotions about Agoda and its
-                affiliates or business partners via various channels, including
-                WhatsApp. Opt out anytime. Read more in the Privacy Policy.
+                I agree to receive updates and promotions about Trizzy and its
+                affiliates or business partners via various channels. Opt out
+                anytime. Read more in the Privacy Policy.
               </label>
             </div>
             {isRegisterValid ? (
@@ -271,7 +271,7 @@ export default function Register() {
 
             <div className="mt-10 mb-2 md:mb-0">
               <p className="text-xs text-gray-500 mt-4 text-center">
-                By signing in, I agree to Agoda&apos;s{" "}
+                By signing up, I agree to Trizzy{" "}
                 <span className="text-blue-500">Terms of Use</span> and{" "}
                 <span className="text-blue-500">Privacy Policy.</span>
               </p>

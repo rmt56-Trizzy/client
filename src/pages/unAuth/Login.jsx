@@ -29,8 +29,8 @@ export const GOOGLE_LOGIN = gql`
 
 export default function Login() {
   const [input, setInput] = useState({
-    email: "jon@mail.com",
-    password: "12345",
+    email: "",
+    password: "",
   });
   const [isValidInputLogin, setIsValidInputLogin] = useState(false);
   const navigate = useNavigate();
@@ -119,7 +119,7 @@ export default function Login() {
                 value={input.email}
                 onChange={(e) => setInput({ ...input, email: e.target.value })}
                 className="mt-4 w-full border text-sm border-gray-300 rounded-lg px-4 md:py-3 py-2 focus:outline-none focus:border-blue-500"
-                placeholder="id@email.com"
+                placeholder="Email"
                 required
               />
             </div>
@@ -181,7 +181,7 @@ export default function Login() {
             </div>
 
             <p className="text-xs sm:text-sm text-gray-500 text-center">
-              By signing in, I agree to Agoda&apos;s{" "}
+              By signing in, I agree to Trizzy{" "}
               <span className="text-blue-500 cursor-pointer hover:underline">
                 Terms of Use
               </span>{" "}

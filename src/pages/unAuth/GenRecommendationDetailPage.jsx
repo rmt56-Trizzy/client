@@ -14,35 +14,39 @@ import FitBounds from "../../components/Fitbounds";
 import LoadingPage from "../../components/LoadingPage";
 import { convertArrayToObject } from "../../utils/convertObjItinery";
 import { toastError } from "../../utils/swallAlert";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import Swal from "sweetalert2";
 
 export const GET_GEN_RECOMMEND_DETAIL = gql`
-query GetGeneralRecommendationDetails($id: ID!) {
-  getGeneralRecommendationDetails(_id: $id) {
-    _id
-    city
-    country
-    countryCode
-    cityImage
-    daysCount
-    itineraries {
-      day
-      locations {
-        slug
-        name
-        image
-        category
-        coordinates
+  query GetGeneralRecommendationDetails($id: ID!) {
+    getGeneralRecommendationDetails(_id: $id) {
+      _id
+      city
+      country
+      countryCode
+      cityImage
+      daysCount
+      itineraries {
+        day
+        locations {
+          slug
+          name
+          image
+          category
+          coordinates
+        }
       }
     }
   }
-}
-`
+`;
 
 export const ADD_GEN_REC_TO_MY_TRIP = gql`
-mutation AddGeneralRecommendationToMyTrip($generalRecommendationId: ID!) {
-  addGeneralRecommendationToMyTrip(generalRecommendationId: $generalRecommendationId)
-}
-`
+  mutation AddGeneralRecommendationToMyTrip($generalRecommendationId: ID!) {
+    addGeneralRecommendationToMyTrip(
+      generalRecommendationId: $generalRecommendationId
+    )
+  }
+`;
 
 export default function GeneralRecommendationDetailPage() {
   const [selectedDay, setSelectedDay] = useState(null);
@@ -63,8 +67,6 @@ export default function GeneralRecommendationDetailPage() {
       id: id,
     },
   });
-
-  // console.log(data,"ini apa");
 
   const [addToMyTrip, { loading: loadingAddToTrip }] = useMutation(
     ADD_GEN_REC_TO_MY_TRIP
@@ -101,17 +103,31 @@ export default function GeneralRecommendationDetailPage() {
     try {
       const { data } = await addToMyTrip({
         variables: {
-          generalRecommendationId: id, 
+          generalRecommendationId: id,
         },
       });
 
       const recommendationId = data.addGeneralRecommendationToMyTrip;
 
       navigate(`/recommendation/${recommendationId}`);
-      
+
       setIsAddToTrip(true);
     } catch (error) {
-      toastError(error);
+      if (error) {
+        Swal.fire({
+          title: "Warning!",
+          text: "You have saved this itinerary.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "See My Trips",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/profile");
+          }
+        });
+      }
     }
   };
 
@@ -178,7 +194,6 @@ export default function GeneralRecommendationDetailPage() {
     }
   };
 
-
   return (
     <div className="max-w-[63rem] mx-auto md:pt-8 pt-4 pb-12 px-4 overflow-hidden md:overflow-visible">
       <div className="grid grid-cols-1 lg:grid-cols-[550px_1fr] gap-8">
@@ -191,13 +206,19 @@ export default function GeneralRecommendationDetailPage() {
         >
           {/* Thumbnail */}
           <div className="thumbnail-section relative mb-4">
+            <button
+              className="absolute bg-gray-700/50 rounded-md top-2 md:top-4 text-white hover:scale-110 cursor-pointer md:left-4 left-2 z-5"
+              onClick={() => navigate(-1)}
+            >
+              <MdOutlineKeyboardArrowLeft className="md:text-4xl text-3xl" />
+            </button>
             <img
               src={city?.cityImage}
               alt={city?.city}
               className="w-full rounded-lg"
             />
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-60 rounded-b-lg"></div>
-            <div className="absolute bottom-[43px] left-4 bg-opacity-60 px-2 py-1 rounded">
+            <div className="absolute md:bottom-[43px] bottom-5 md:left-4 left-2 bg-opacity-60 px-2 py-1 rounded">
               <h2 className="text-white text-2xl md:text-4xl font-medium truncate">
                 {city?.city} for {city?.daysCount} days
               </h2>

@@ -5,14 +5,13 @@ import client from "./config/apolllo";
 import AuthLayout from "./layouts/AuthLayout";
 import MainPageLayout from "./layouts/MainPageLayout";
 import UnAuthLayout from "./layouts/UnAuthLayout";
-import PaymentPage from "./pages/Auth/PaymentPage";
+import PaymentPage from "./pages/auth/PaymentPage";
 import Homepage from "./pages/unAuth/Homepage";
 import Login from "./pages/unAuth/Login";
 import Register from "./pages/unAuth/Register";
-
-import ChatPage from "./pages/Auth/ChatPage";
-import ProfilePage from "./pages/Auth/ProfilePage";
-import RecommendationDetailPage from "./pages/Auth/RecommendationDetailPage";
+import ChatPage from "./pages/auth/ChatPage";
+import ProfilePage from "./pages/auth/ProfilePage";
+import RecommendationDetailPage from "./pages/auth/RecommendationDetailPage";
 import GeneralRecommendationDetailPage from "./pages/unAuth/GenRecommendationDetailPage";
 
 function App() {
