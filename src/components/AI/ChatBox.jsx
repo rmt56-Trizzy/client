@@ -73,6 +73,7 @@ export default function ChatBox({ generateRecommendation }) {
     variables: {
       chatId: id,
     },
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
       if (data?.getRecommendations?.length > 0) {
         setEndChat(true);
@@ -142,8 +143,7 @@ export default function ChatBox({ generateRecommendation }) {
     <div
       className={`w-full shadow-2xl rounded-xl ${
         endChat ? "hidden md:block" : ""
-      }`}
-    >
+      }`}>
       {/* Chat Header */}
       <div className="bg-gradient-to-r from-teal-400 to-teal-500 text-white rounded-t-xl md:py-6 py-4 flex items-center px-6 font-bold text-base md:text-2xl shadow-md">
         <div className="flex items-center gap-3">
@@ -155,27 +155,23 @@ export default function ChatBox({ generateRecommendation }) {
       {/* Messages Container */}
       <div
         ref={chatContainerRef}
-        className="bg-white h-[360px] md:h-[500px] overflow-y-scroll pl-4 py-4 md:pl-6 md:pr-2 space-y-4"
-      >
+        className="bg-white h-[360px] md:h-[500px] overflow-y-scroll pl-4 py-4 md:pl-6 md:pr-2 space-y-4">
         {chatMessages.map((msg, index) => (
           <div
             key={index}
             className={`flex ${
               msg.sender === "User" ? "justify-end" : "justify-start"
-            } w-full`}
-          >
+            } w-full`}>
             <div
               className={`rounded-2xl py-1 px-3 md:py-1.5 ${
                 msg.sender === "User"
                   ? "bg-gradient-to-r from-teal-400 to-teal-500 text-white shadow-lg"
                   : "bg-gray-100 shadow"
-              } w-fit max-w-[300px] transform transition-all duration-200 hover:scale-102 text-xs md:text-base`}
-            >
+              } w-fit max-w-[300px] transform transition-all duration-200 hover:scale-102 text-xs md:text-base`}>
               <p
                 className={`${
                   msg.sender === "User" ? "text-right" : "text-left"
-                } leading-relaxed`}
-              >
+                } leading-relaxed`}>
                 {msg.message}
               </p>
             </div>
@@ -203,15 +199,13 @@ export default function ChatBox({ generateRecommendation }) {
         />
         {endChat ? (
           <button
-            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}
-          >
+            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}>
             <IoIosSend className="md:text-2xl text-xl text-white" />
           </button>
         ) : (
           <button
             onClick={handleSendMessage}
-            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-105 cursor-pointer`}
-          >
+            className={`rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-105 cursor-pointer`}>
             <IoIosSend className="md:text-2xl text-xl text-white" />
           </button>
         )}
@@ -220,16 +214,14 @@ export default function ChatBox({ generateRecommendation }) {
         <div className="p-4 bg-white rounded-b-xl flex items-center w-full">
           {endChat ? (
             <button
-              className={`w-full rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}
-            >
+              className={`w-full rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gray-400`}>
               Recommendation Generated
             </button>
           ) : (
             <button
               onClick={handleGenerateResponse}
               className={`w-full text-white rounded-full flex justify-center items-center md:p-3 p-1.5 ml-2 shadow-lg transition-all duration-200 bg-gradient-to-r from-teal-400 to-teal-500 hover:shadow-xl hover:scale-102 cursor-pointer
-              `}
-            >
+              `}>
               End Chat and Generate Recommendations
             </button>
           )}

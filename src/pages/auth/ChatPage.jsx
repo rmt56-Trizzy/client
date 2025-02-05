@@ -75,6 +75,7 @@ export default function ChatPage() {
     variables: {
       chatId: id,
     },
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
       if (data?.getRecommendations?.length > 0) {
         setRecommendations(data?.getRecommendations);

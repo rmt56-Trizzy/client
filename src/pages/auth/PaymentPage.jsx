@@ -52,13 +52,13 @@ export default function PaymentPage() {
 
   // Function to call the backend and get Snap Token
   const createTransaction = async () => {
-    let price = 10000;
+    let price = import.meta.env.VITE_SUBSCRIPTION_PRICE || 189000;
 
     setLoading(true); // ✅ Show loading when payment is being processed
     setPaymentStatus(null); // ✅ Reset previous payment status
 
     try {
-      const response = await fetch("http://localhost:3005/graphql", {
+      const response = await fetch(import.meta.env.VITE_BASE_SERVER_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
