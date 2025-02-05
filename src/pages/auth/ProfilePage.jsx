@@ -4,7 +4,7 @@ import { toastError, toastSuccess } from "../../utils/swallAlert";
 import { useNavigate } from "react-router";
 
 const access_token = localStorage.getItem("access_token");
-const price = 189000;
+const price = import.meta.env.VITE_SUBSCRIPTION_PRICE;
 
 const CHECK_SUBSCRIPTION = gql`
   query IsSubscribed {
