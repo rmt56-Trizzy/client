@@ -79,6 +79,16 @@ const GET_GENERAL_RECOMMENDATIONS = gql`
       countryCode
       cityImage
       daysCount
+      itineraries {
+        day
+        locations {
+          slug
+          name
+          image
+          category
+          coordinates
+        }
+      }
     }
   }
 `;
@@ -86,6 +96,7 @@ const GET_GENERAL_RECOMMENDATIONS = gql`
 export default function Homepage() {
   const [topPlaces, setTopPlaces] = useState([]);
   const { data, loading } = useQuery(GET_GENERAL_RECOMMENDATIONS);
+  console.log("🚀 ~ Homepage ~ data:", data);
 
   useEffect(() => {
     if (data) {
